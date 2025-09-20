@@ -548,6 +548,9 @@ class RegisterController extends Controller
             ]);
         }
 
+        updateUserRankRequirements();
+
+        updateUserRanks();
 
         return $user;
     }
