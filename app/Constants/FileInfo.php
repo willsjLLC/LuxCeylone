@@ -135,7 +135,10 @@ class FileInfo
             'path'      =>'assets/admin/images/productSubCategory',
             'size'      =>'600x600',
         ];
-
+        $data['rank'] = [
+            'path' => 'assets/admin/images/rank',
+            "size" => '400x400',
+        ];
         return $data;
 	}
 
