@@ -60,7 +60,7 @@
                                             <div class="d-flex gap-2 flex-wrap justify-content-end">
                                                 <button type="button"
                                                     class="btn btn-sm btn-outline--danger confirmationBtn"
-                                                    data-action="{{ route('admin.ranks.delete', $rankDetail->id) }}"
+                                                    data-action="{{ route('admin.ranks.requirements.delete', $rankDetail->id) }}"
                                                     data-question="@lang('Are you sure to disable this rank type?')">
                                                     @lang('Delete')
                                                 </button>
