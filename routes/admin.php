@@ -309,6 +309,31 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('delete/{id}', 'deleteImage')->name('delete');
     });
 
+    // Manage ranks
+    Route::controller('RankController')->prefix('ranks')->name('ranks.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('store/{id?}', 'store')->name('store');
+        Route::post('delete/{id?}', 'delete')->name('delete');
+
+        Route::get('/requirement', 'requirementIndex')->name('requirements');
+        Route::get('/requirement/create', 'requirementCreate')->name('requirements.create');
+        Route::get('/requirement/edit/{id}', 'requirementCreate')->name('requirements.edit');
+        Route::post('/requirement/store', 'requirementStore')->name('requirements.store');
+        Route::put('/requirement/store/{id}', 'requirementStore')->name('requirements.update');
+        Route::post('/requirement/delete/{id}', 'requirementDelete')->name('requirements.delete');
+
+        Route::get('/reward', 'rewardIndex')->name('rewards');
+        Route::post('/reward/store/{id?}', 'rewardStore')->name('rewards.store');
+        Route::post('/reward/delete/{id?}', 'rewardDelete')->name('rewards.delete');
+
+        Route::get('/user/reward', 'allUserRewardIndex')->name('all.user.rewards');
+        Route::get('/view/user/reward/{id}', 'viewUserRewardIndex')->name('view.user.rewards');
+        Route::post('/update/user/reward/{id}', 'updateUserRewardIndex')->name('user.rewards.update');
+        Route::get('/pending/user/reward', 'pendingUserRewardIndex')->name('user.rewards.processing');
+        Route::get('/completed/user/reward', 'completedUserRewardIndex')->name('user.rewards.completed');
+        Route::get('/canceled/user/reward', 'canceledUserRewardIndex')->name('user.rewards.canceled');
+    });
+
     // Manage jobs
     Route::controller('JobController')->prefix('job')->name('jobs.')->group(function () {
         Route::get('/', 'index')->name('index');
@@ -393,7 +418,7 @@ Route::middleware('auth:admin')->group(function () {
         Route::post('store/{id?}', 'store')->name('store');
         Route::post('status/{id}', 'status')->name('status');
         Route::get('edit/{id}', 'edit')->name('edit');
-        Route::get('related-category/{category_id}',  'getByCategory')->name('related.category.get');
+        Route::get('related-category/{category_id}', 'getByCategory')->name('related.category.get');
 
     });
 

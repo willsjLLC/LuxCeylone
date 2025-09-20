@@ -66,6 +66,39 @@
             "route_name": "admin.banner.index",
             "menu_active": "admin.banner*"
         },
+         "mange_ranks": {
+            "title": "Manage Ranks",
+            "icon": "las la-star",
+            "menu_active": "admin.ranks*",
+            "submenu": [
+                {
+                    "keyword": [
+                        "all ranks",
+                        "Manage ranks",
+                        "rank management",
+                        "rank control",
+                        "rank status",
+                        "rank activity",
+                        "rank analytics"
+                    ],
+                    "title": "Ranks",
+                    "route_name": "admin.ranks.index",
+                    "menu_active": "admin.ranks.index"
+                },
+                {
+                    "keyword": [
+                        "Rank Requirements",
+                        "Manage Rank Requirements",
+                        "Rank Requirement management",
+                        "Rank Requirement status",
+                        "Rank Requirement activity"
+                    ],
+                    "title": "Mange Requirements",
+                    "route_name": "admin.ranks.requirements",
+                    "menu_active": "admin.ranks.requirements"
+                }
+            ]
+        },
         "training": {
             "title": "Manage Trainings",
             "icon": "las la-chalkboard-teacher",
