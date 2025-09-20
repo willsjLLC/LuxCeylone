@@ -1501,6 +1501,10 @@ class PaymentController extends Controller
 
             DB::commit();
 
+            updateUserRankRequirements();
+
+            updateUserRanks();
+
             $notify[] = ['success', 'Order purchased successfully'];
             return redirect()->route('user.product.index')->withNotify($notify);
         } catch (\Exception $e) {
