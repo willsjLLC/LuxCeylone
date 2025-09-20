@@ -1116,51 +1116,38 @@ function updateUserRankRequirements()
     }
 }
 
-
 function updateUserRanks()
 {
     $users = User::all();
 
     foreach ($users as $user) {
         $rankDetail = UserRankDetail::where('user_id', $user->id)->first();
+
+        if (!$rankDetail) {
+            continue;
+        }
+
         $atLeastOneProductPurchase = PurchaseHistory::where('customer_id', $user->id)
             ->where('payment_status', Status::PAYMENT_SUCCESS)
             ->exists();
 
-        if ($rankDetail) {
+        $rankRequirements = RankRequirement::orderBy('rank_id', 'desc')->get();
 
-            $rankRequirements = RankRequirement::orderBy('rank_id', 'desc')
-                ->get();
+        foreach ($rankRequirements as $requirement) {
+            $meetsUserCounts =
+                $rankDetail->level_one_user_count   >= $requirement->level_one_user_count &&
+                $rankDetail->level_two_user_count   >= $requirement->level_two_user_count &&
+                $rankDetail->level_three_user_count >= $requirement->level_three_user_count &&
+                $rankDetail->level_four_user_count  >= $requirement->level_four_user_count;
 
-            foreach ($rankRequirements as $requirement) {
-                if ($requirement->required_at_least_one_product_purchase == true) {
-                    if (
-                        $rankDetail->level_one_user_count >= $requirement->level_one_user_count &&
-                        $rankDetail->level_two_user_count >= $requirement->level_two_user_count &&
-                        $rankDetail->level_three_user_count >= $requirement->level_three_user_count &&
-                        $rankDetail->level_four_user_count >= $requirement->level_four_user_count &&
-                        $atLeastOneProductPurchase
-                    ) {
-                        if ($rankDetail->current_rank_id != $requirement->rank_id) {
-                            $rankDetail->current_rank_id = $requirement->rank_id;
-                            $rankDetail->save();
-                        }
-                        break;
-                    }
-                } else {
-                    if (
-                        $rankDetail->level_one_user_count >= $requirement->level_one_user_count &&
-                        $rankDetail->level_two_user_count >= $requirement->level_two_user_count &&
-                        $rankDetail->level_three_user_count >= $requirement->level_three_user_count &&
-                        $rankDetail->level_four_user_count >= $requirement->level_four_user_count
-                    ) {
-                        if ($rankDetail->current_rank_id != $requirement->rank_id) {
-                            $rankDetail->current_rank_id = $requirement->rank_id;
-                            $rankDetail->save();
-                        }
-                        break;
-                    }
+            $meetsPurchase = !$requirement->required_at_least_one_product_purchase || $atLeastOneProductPurchase;
+
+            if ($meetsUserCounts && $meetsPurchase) {
+                if ($rankDetail->current_rank_id != $requirement->rank_id) {
+                    $rankDetail->current_rank_id = $requirement->rank_id;
+                    $rankDetail->save();
                 }
+                break;
             }
         }
     }
