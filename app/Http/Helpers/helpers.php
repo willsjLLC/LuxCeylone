@@ -5,6 +5,9 @@ use App\Lib\GoogleAuthenticator;
 use App\Models\Extension;
 use App\Models\Frontend;
 use App\Models\GeneralSetting;
+use App\Models\PurchaseHistory;
+use App\Models\RankRequirement;
+use App\Models\UserRankDetail;
 use Carbon\Carbon;
 use App\Lib\Captcha;
 use App\Lib\ClientInfo;
@@ -1064,6 +1067,101 @@ function processEmployeePackageActivations($user_id)
             $totalPaidAmount += $activation->transaction->amount;
         } else {
             break;
+        }
+    }
+}
+
+function updateUserRankRequirements()
+{
+    $users = User::all();
+
+    foreach ($users as $user) {
+        $rank = UserRankDetail::firstOrCreate(['user_id' => $user->id], [
+            'level_one_user_count' => 0,
+            'level_two_user_count' => 0,
+            'level_three_user_count' => 0,
+            'level_four_user_count' => 0,
+        ]);
+
+        $rank->level_one_user_count = 0;
+        $rank->level_two_user_count = 0;
+        $rank->level_three_user_count = 0;
+        $rank->level_four_user_count = 0;
+
+        $firstLevelUsers = User::where('referred_user_id', $user->id)->get();
+        $firstLevelUserIds = $firstLevelUsers->pluck('id')->toArray();
+        if (!empty($firstLevelUserIds)) {
+            $rank->level_one_user_count = count($firstLevelUserIds);
+        }
+
+        $secondLevelUsers = User::whereIn('referred_user_id', $firstLevelUserIds)->get();
+        $secondLevelUserIds = $secondLevelUsers->pluck('id')->toArray();
+        if (!empty($secondLevelUserIds)) {
+            $rank->level_two_user_count = count($secondLevelUserIds);
+        }
+
+        $thirdLevelUsers = User::whereIn('referred_user_id', $secondLevelUserIds)->get();
+        $thirdLevelUserIds = $thirdLevelUsers->pluck('id')->toArray();
+        if (!empty($thirdLevelUserIds)) {
+            $rank->level_three_user_count = count($thirdLevelUserIds);
+        }
+
+        $fourthLevelUsers = User::whereIn('referred_user_id', $thirdLevelUserIds)->get();
+        $fourthLevelUserIds = $fourthLevelUsers->pluck('id')->toArray();
+        if (!empty($fourthLevelUserIds)) {
+            $rank->level_four_user_count = count($fourthLevelUserIds);
+        }
+
+        $rank->save();
+    }
+}
+
+
+function updateUserRanks()
+{
+    $users = User::all();
+
+    foreach ($users as $user) {
+        $rankDetail = UserRankDetail::where('user_id', $user->id)->first();
+        $atLeastOneProductPurchase = PurchaseHistory::where('customer_id', $user->id)
+            ->where('payment_status', Status::PAYMENT_SUCCESS)
+            ->exists();
+
+        if ($rankDetail) {
+
+            $rankRequirements = RankRequirement::orderBy('rank_id', 'desc')
+                ->get();
+
+            foreach ($rankRequirements as $requirement) {
+                if ($requirement->required_at_least_one_product_purchase == true) {
+                    if (
+                        $rankDetail->level_one_user_count >= $requirement->level_one_user_count &&
+                        $rankDetail->level_two_user_count >= $requirement->level_two_user_count &&
+                        $rankDetail->level_three_user_count >= $requirement->level_three_user_count &&
+                        $rankDetail->level_four_user_count >= $requirement->level_four_user_count &&
+                        $atLeastOneProductPurchase
+                    ) {
+                        if ($rankDetail->current_rank_id != $requirement->rank_id) {
+                            $rankDetail->current_rank_id = $requirement->rank_id;
+                            $rankDetail->save();
+                        }
+                        break;
+                    }
+                } else {
+                    if (
+                        $rankDetail->level_one_user_count >= $requirement->level_one_user_count &&
+                        $rankDetail->level_two_user_count >= $requirement->level_two_user_count &&
+                        $rankDetail->level_three_user_count >= $requirement->level_three_user_count &&
+                        $rankDetail->level_four_user_count >= $requirement->level_four_user_count
+                    ) {
+                        if ($rankDetail->current_rank_id != $requirement->rank_id) {
+                            $rankDetail->current_rank_id = $requirement->rank_id;
+                            $rankDetail->save();
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
 }
