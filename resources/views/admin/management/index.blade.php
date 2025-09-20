@@ -38,8 +38,6 @@
                                             </div>
                                         </td>
 
-
-
                                         <td>
                                             <span class="fw-bold">{{ $admin->name }}</span>
                                         </td>

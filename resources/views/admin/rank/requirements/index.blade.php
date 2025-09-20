@@ -14,6 +14,7 @@
                                     <th class="text-end">@lang('No Of Users Require In Level Two')</th>
                                     <th class="text-end">@lang('No Of Users Require In Level Three')</th>
                                     <th class="text-end">@lang('No Of Users Require In Level Four')</th>
+                                    <th class="text-end">@lang('At Least One Product Purchase')</th>
                                     <th>@lang('Action')</th>
                                 </tr>
                             </thead>
@@ -48,6 +49,11 @@
 
                                         <td class="text-end">
                                             <span class="name">{{ $rankDetail->level_four_user_count }}</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span
+                                                class="name">{{ $rankDetail->required_at_least_one_product_purchase == 1 ? 'YES' : 'NO' }}</span>
                                         </td>
 
                                         <td>
@@ -151,6 +157,20 @@
                             <div class="col-sm-12">
                                 <input type="number" class="form-control" name="level_four_user_count" min="0"
                                     required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>@lang('At Least One Product Purchase')</label>
+                            <div
+                                class="form-switch border rounded p-3 shadow-sm h-100 d-flex justify-content-between align-items-center">
+                                <label for="required_at_least_one_product_purchase" class="form-check-label fw-semibold">
+
+                                </label>
+                                <input type="checkbox" data-width="100%" data-height="50" data-onstyle="-success"
+                                    data-offstyle="-danger" name="required_at_least_one_product_purchase"
+                                    id="required_at_least_one_product_purchase" data-off="@lang('Disabled')"
+                                    class="form-check-input" data-bs-toggle="toggle" data-on="@lang('Enable')"
+                                    {{ $rankDetail->required_at_least_one_product_purchase == 1 ? 'checked' : '' }}>
                             </div>
                         </div>
 
@@ -310,6 +330,9 @@
                 modal.find('input[name=level_two_user_count]').val(rank.level_two_user_count);
                 modal.find('input[name=level_three_user_count]').val(rank.level_three_user_count);
                 modal.find('input[name=level_four_user_count]').val(rank.level_four_user_count);
+                modal.find('input[name=required_at_least_one_product_purchase]')
+                    .prop('checked', rank.required_at_least_one_product_purchase == 1)
+                    .change();
                 loadExistingImage(imageUrl);
                 modal.modal('show');
             });

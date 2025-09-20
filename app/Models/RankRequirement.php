@@ -12,7 +12,8 @@ class RankRequirement extends Model
         'level_one_user_count',
         'level_two_user_count',
         'level_three_user_count',
-        'level_four_user_count'
+        'level_four_user_count',
+        'required_at_least_one_product_purchase'
     ];
 
     public function rank(){
