@@ -209,9 +209,6 @@ class RankController extends Controller
         $rankReward->rank_two_claimed_status = $request->rank_two_claimed_status;
         $rankReward->rank_three_claimed_status = $request->rank_three_claimed_status;
         $rankReward->rank_four_claimed_status = $request->rank_four_claimed_status;
-        $rankReward->rank_five_claimed_status = $request->rank_five_claimed_status;
-        $rankReward->rank_six_claimed_status = $request->rank_six_claimed_status;
-        $rankReward->rank_seven_claimed_status = $request->rank_seven_claimed_status;
 
         $rankReward->save();
 
@@ -230,10 +227,7 @@ class RankController extends Controller
             $query->where('rank_one_claimed_status', Status::RANK_CLAIM_PROCESSING)
                 ->orWhere('rank_two_claimed_status', Status::RANK_CLAIM_PROCESSING)
                 ->orWhere('rank_three_claimed_status', Status::RANK_CLAIM_PROCESSING)
-                ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_PROCESSING)
-                ->orWhere('rank_five_claimed_status', Status::RANK_CLAIM_PROCESSING)
-                ->orWhere('rank_six_claimed_status', Status::RANK_CLAIM_PROCESSING)
-                ->orWhere('rank_seven_claimed_status', Status::RANK_CLAIM_PROCESSING);
+                ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_PROCESSING);
         })->paginate(getPaginate());
 
         return view('admin.rank.userRewards.pending', compact('pageTitle', 'rankRewards'));
@@ -248,10 +242,7 @@ class RankController extends Controller
             $query->where('rank_one_claimed_status', Status::RANK_CLAIM_COMPLETED)
                 ->orWhere('rank_two_claimed_status', Status::RANK_CLAIM_COMPLETED)
                 ->orWhere('rank_three_claimed_status', Status::RANK_CLAIM_COMPLETED)
-                ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_COMPLETED)
-                ->orWhere('rank_five_claimed_status', Status::RANK_CLAIM_COMPLETED)
-                ->orWhere('rank_six_claimed_status', Status::RANK_CLAIM_COMPLETED)
-                ->orWhere('rank_seven_claimed_status', Status::RANK_CLAIM_COMPLETED);
+                ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_COMPLETED);
         })->paginate(getPaginate());
 
         return view('admin.rank.userRewards.completed', compact('pageTitle', 'rankRewards'));
@@ -266,10 +257,7 @@ class RankController extends Controller
             $query->where('rank_one_claimed_status', Status::RANK_CLAIM_CANCELED)
                 ->orWhere('rank_two_claimed_status', Status::RANK_CLAIM_CANCELED)
                 ->orWhere('rank_three_claimed_status', Status::RANK_CLAIM_CANCELED)
-                ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_CANCELED)
-                ->orWhere('rank_five_claimed_status', Status::RANK_CLAIM_CANCELED)
-                ->orWhere('rank_six_claimed_status', Status::RANK_CLAIM_CANCELED)
-                ->orWhere('rank_seven_claimed_status', Status::RANK_CLAIM_CANCELED);
+                ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_CANCELED);
         })->paginate(getPaginate());
 
         return view('admin.rank.userRewards.canceled', compact('pageTitle', 'rankRewards'));

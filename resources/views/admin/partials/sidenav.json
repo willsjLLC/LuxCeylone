@@ -69,6 +69,11 @@
         "mange_ranks": {
             "title": "Manage Ranks",
             "icon": "las la-star",
+             "counters": [
+                "processingRankRewardCount",
+                "completedRankRewardCount",
+                "canceledRankRewardCount"
+            ],
             "menu_active": "admin.ranks*",
             "submenu": [
                 {

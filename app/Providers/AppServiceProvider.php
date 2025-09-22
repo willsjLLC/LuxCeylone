@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Constants\Status;
 use App\Lib\Searchable;
 use App\Models\AdminNotification;
+use App\Models\ClaimedRankReward;
 use App\Models\Deposit;
 use App\Models\JobPost;
 use App\Models\Frontend;
@@ -85,22 +86,40 @@ class AppServiceProvider extends ServiceProvider
 
         view()->composer('admin.partials.sidenav', function ($view) {
             $view->with([
-                'bannedUsersCount'           => User::banned()->count(),
+                'bannedUsersCount' => User::banned()->count(),
                 'emailUnverifiedUsersCount' => User::emailUnverified()->count(),
-                'mobileUnverifiedUsersCount'   => User::mobileUnverified()->count(),
-                'kycUnverifiedUsersCount'   => User::kycUnverified()->count(),
-                'kycPendingUsersCount'   => User::kycPending()->count(),
+                'mobileUnverifiedUsersCount' => User::mobileUnverified()->count(),
+                'kycUnverifiedUsersCount' => User::kycUnverified()->count(),
+                'kycPendingUsersCount' => User::kycPending()->count(),
                 'kycApprovedUsersCount' => User::kycApproved()->count(),
-                'pendingTicketCount'         => SupportTicket::whereIN('status', [Status::TICKET_OPEN, Status::TICKET_REPLY])->count(),
-                'pendingDepositsCount'    => Deposit::pending()->count(),
-                'pendingWithdrawCount'    => Withdrawal::pending()->count(),
-                'pendingJobCount'            => JobPost::pending()->count(),
+                'pendingTicketCount' => SupportTicket::whereIN('status', [Status::TICKET_OPEN, Status::TICKET_REPLY])->count(),
+                'pendingDepositsCount' => Deposit::pending()->count(),
+                'pendingWithdrawCount' => Withdrawal::pending()->count(),
+                'pendingJobCount' => JobPost::pending()->count(),
                 'processingOrdersCount' => Order::where('status', Status::ORDER_PROCESSING)->count(),
                 'pendingTrainingsCount' => UserTraining::where('status', Status::TRAINING_PENDING)->count(),
                 'completedTrainingsCount' => UserTraining::where('status', Status::TRAINING_COMPLETED)->count(),
                 'rejectedTrainingsCount' => UserTraining::where('status', Status::TRAINING_REJECTED)->count(),
                 'pendingAdsCount' => Advertisement::where('status', Status::AD_PENDING)->count(),
-                'updateAvailable'    => version_compare(gs('available_version'), systemDetails()['version'], '>') ? 'v' . gs('available_version') : false,
+                'processingRankRewardCount' => ClaimedRankReward::where(function ($query) {
+                    $query->where('rank_one_claimed_status', Status::RANK_CLAIM_PROCESSING)
+                        ->orWhere('rank_two_claimed_status', Status::RANK_CLAIM_PROCESSING)
+                        ->orWhere('rank_three_claimed_status', Status::RANK_CLAIM_PROCESSING)
+                        ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_PROCESSING);
+                })->count(),
+                'completedRankRewardCount' => ClaimedRankReward::where(function ($query) {
+                    $query->where('rank_one_claimed_status', Status::RANK_CLAIM_COMPLETED)
+                        ->orWhere('rank_two_claimed_status', Status::RANK_CLAIM_COMPLETED)
+                        ->orWhere('rank_three_claimed_status', Status::RANK_CLAIM_COMPLETED)
+                        ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_COMPLETED);
+                })->count(),
+                'canceledRankRewardCount' => ClaimedRankReward::where(function ($query) {
+                    $query->where('rank_one_claimed_status', Status::RANK_CLAIM_CANCELED)
+                        ->orWhere('rank_two_claimed_status', Status::RANK_CLAIM_CANCELED)
+                        ->orWhere('rank_three_claimed_status', Status::RANK_CLAIM_CANCELED)
+                        ->orWhere('rank_four_claimed_status', Status::RANK_CLAIM_CANCELED);
+                })->count(),
+                'updateAvailable' => version_compare(gs('available_version'), systemDetails()['version'], '>') ? 'v' . gs('available_version') : false,
             ]);
         });
 
@@ -123,7 +142,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Route::middleware('web')
-        ->group(base_path('routes/user.php'));
+            ->group(base_path('routes/user.php'));
 
         Paginator::useBootstrapFive();
     }
@@ -173,7 +192,7 @@ class AppServiceProvider extends ServiceProvider
     //     view()->composer('admin.partials.sidenav', function ($view) {
     //         try{
     //             $litePendingResponse = Http::get(config('services.lite_api.url') . '/api/lite/pending/advertisements');
-    
+
     //             if ($litePendingResponse->successful()) {
     //                 $pendingLiteAds = json_decode($litePendingResponse->body(), true);
     //             }

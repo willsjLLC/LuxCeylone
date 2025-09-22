@@ -134,7 +134,7 @@
                                 ];
                             @endphp
 
-                            @for ($i = 1; $i <= 7; $i++)
+                            @for ($i = 1; $i <= 4; $i++)
                                 @php
                                     $rankName = $rankLevelMap[$i];
                                     $statusField = 'rank_' . $rankName . '_status';
