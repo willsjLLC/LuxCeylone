@@ -113,6 +113,8 @@
         </li>
         <li><a href="{{ route('user.advertisement.index') }}" class="text-light"><i class="la la-sign-out"></i>
                 Advertisement</a></li>
+        <li><a href="{{ route('user.rank.index') }}" class="text-light"><i class="fa-solid fa-ranking-star"></i>
+                Ranks</a></li>
         <li><a href="{{ route('user.wallet') }}" class="text-light"><i class="las la-wallet"></i> Wallet</a></li>
 
 

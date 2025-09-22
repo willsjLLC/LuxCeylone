@@ -74,9 +74,11 @@ class RankController extends Controller
 
     public function requirementIndex()
     {
+        
         $pageTitle = "Manage Rank Requirements";
         $rankRequirements = RankRequirement::paginate(getPaginate());
         $ranks = Rank::orderBy('no_of_stars')->get();
+        
         return view('admin.rank.requirements.index', compact('pageTitle', 'rankRequirements', 'ranks'));
     }
 
