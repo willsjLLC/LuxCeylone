@@ -66,9 +66,14 @@
             "route_name": "admin.banner.index",
             "menu_active": "admin.banner*"
         },
-         "mange_ranks": {
+        "mange_ranks": {
             "title": "Manage Ranks",
             "icon": "las la-star",
+             "counters": [
+                "processingRankRewardCount",
+                "completedRankRewardCount",
+                "canceledRankRewardCount"
+            ],
             "menu_active": "admin.ranks*",
             "submenu": [
                 {
@@ -96,6 +101,69 @@
                     "title": "Mange Requirements",
                     "route_name": "admin.ranks.requirements",
                     "menu_active": "admin.ranks.requirements"
+                },
+                {
+                    "keyword": [
+                        "Rank Rewards",
+                        "Manage Rank Rewards",
+                        "Rank Rewards management",
+                        "Rank Rewards status",
+                        "Rank Rewards activity"
+                    ],
+                    "title": "Manage Rewards",
+                    "route_name": "admin.ranks.rewards",
+                    "menu_active": "admin.ranks.rewards"
+                },
+                {
+                    "keyword": [
+                        "User Rank Rewards",
+                        "Manage User Rank Rewards",
+                        "User Rank Rewards management",
+                        "User Rank Rewards status",
+                        "User Rank Rewards activity"
+                    ],
+                    "title": "All User Rewards",
+                    "route_name": "admin.ranks.all.user.rewards",
+                    "menu_active": "admin.ranks.all.user.rewards"
+                },
+                {
+                    "keyword": [
+                        "Processing Rank Rewards",
+                        "Processing Pending Rank Rewards",
+                        "Processing Rank Rewards management",
+                        "Processing Rank Rewards status",
+                        "Processing Rank Rewards activity"
+                    ],
+                    "title": "Processing Rewards",
+                    "route_name": "admin.ranks.user.rewards.processing",
+                    "menu_active": "admin.ranks.user.rewards.processing",
+                    "counter": "processingRankRewardCount"
+                },
+                {
+                    "keyword": [
+                        "Completed Rank Rewards",
+                        "Completed Pending Rank Rewards",
+                        "Completed Rank Rewards management",
+                        "Completed Rank Rewards status",
+                        "Completed Rank Rewards activity"
+                    ],
+                    "title": "Completed Rewards",
+                    "route_name": "admin.ranks.user.rewards.completed",
+                    "menu_active": "admin.ranks.user.rewards.completed",
+                    "counter": "completedRankRewardCount"
+                },
+                {
+                    "keyword": [
+                        "Cancelled Rank Rewards",
+                        "Cancelled Pending Rank Rewards",
+                        "Cancelled Rank Rewards management",
+                        "Cancelled Rank Rewards status",
+                        "Cancelled Rank Rewards activity"
+                    ],
+                    "title": "Cancelled Rewards",
+                    "route_name": "admin.ranks.user.rewards.canceled",
+                    "menu_active": "admin.ranks.user.rewards.canceled",
+                    "counter": "canceledRankRewardCount"
                 }
             ]
         },
