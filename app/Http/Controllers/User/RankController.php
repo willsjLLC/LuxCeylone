@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserRankDetail;
 use App\Models\RankRequirement;
+use App\Models\ClaimedRankReward;
+use App\Models\RankReward;
 use App\Constants\Status;
 
 class RankController extends Controller
@@ -23,6 +25,10 @@ class RankController extends Controller
         
         // Get user rank details
         $userRankDetail = UserRankDetail::where('user_id', $user->id)->first();
+
+        // Get claimed rank rewards
+        $claimedRankRewards = ClaimedRankReward::where('user_id', $user->id)->first();
+
         
         // Get current rank details
         $currentRank = $userRankDetail && $userRankDetail->current_rank_id 
@@ -34,6 +40,11 @@ class RankController extends Controller
         $nextRank = Rank::where('rank', $currentRankLevel + 1)->first();
         $progressData = $this->calculateRankProgress($user, $userRankDetail, $currentRankLevel + 1);
 
+        // Add claim status to each rank
+        foreach ($ranks as $rank) {
+            $rank->claim_status = $this->getRankClaimStatus($rank, $user, $claimedRankRewards);
+        }
+
         return view('Template::user.rank.index', compact(
             'pageTitle',
             'ranks',
@@ -42,7 +53,8 @@ class RankController extends Controller
             'currentRankLevel',
             'progressData',
             'user',
-            'userRankDetail'
+            'userRankDetail',
+            'claimedRankRewards'
         ));
     }
 
@@ -215,6 +227,9 @@ class RankController extends Controller
         // Get rank requirements from database
         $rankRequirements = RankRequirement::where('rank_id', $rank->id)->first();
 
+        // Get rank rewards
+        $rankRewards = RankReward::where('rank_id', $rank->id)->get();
+
         // Calculate progress for this specific rank
         $progressData = $this->calculateRankProgress($user, $userRankDetail, $rank->rank);
 
@@ -229,6 +244,12 @@ class RankController extends Controller
         // Get all ranks for navigation
         $allRanks = Rank::orderBy('rank')->get();
 
+        
+        // Get claimed rank rewards and claim status - UPDATED TO USE RANK NUMBER
+        $claimedRankRewards = ClaimedRankReward::where('user_id', $user->id)->first();
+        $claimStatus = $this->getRankClaimStatus($rank, $user, $claimedRankRewards);
+
+
         return view('Template::user.rank.detail', compact(
             'pageTitle',
             'rank',
@@ -238,8 +259,216 @@ class RankController extends Controller
             'user',
             'userRankDetail',
             'rankRequirements',
+            'rankRewards',
+            'claimStatus',
             'canAchieve',
             'allRanks'
         ));
     }
+    
+      public function claimRankReward(Request $request)
+    {
+        $user = Auth::user();
+        $rankNumber = $request->input('rank_number'); // Changed from rank_id to rank_number
+
+        // Log request details
+        Log::info('claimRankReward called', [
+            'user_id' => $user->id,
+            'rank_number' => $rankNumber,
+            'current_rank_id' => $user->current_rank_id
+        ]);
+
+        // Validate rank exists using rank number
+        $rank = Rank::where('rank', $rankNumber)->first();
+        if (!$rank) {
+            Log::warning('Rank not found', ['rank_number' => $rankNumber]);
+            return response()->json(['success' => false, 'message' => 'Rank not found'], 404);
+        }
+
+        // Get current user's rank number
+        $currentRank = $user->current_rank_id ? Rank::find($user->current_rank_id) : null;
+        $currentRankNumber = $currentRank ? $currentRank->rank : 0;
+
+        // Check if user has achieved this rank
+        if ($currentRankNumber < $rankNumber) {
+            Log::warning('Rank not achieved', [
+                'user_id' => $user->id,
+                'rank_number' => $rankNumber,
+                'current_rank_number' => $currentRankNumber
+            ]);
+            return response()->json(['success' => false, 'message' => 'Rank not achieved yet'], 403);
+        }
+
+        // Get or create claimed rank rewards record
+        $claimedRankReward = ClaimedRankReward::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'current_rank_id' => $user->current_rank_id,
+                'rank_one_status' => Status::RANK_PENDING,
+                'rank_one_claimed_status' => Status::RANK_NOT_SATISFIED,
+                'rank_two_status' => Status::RANK_PENDING,
+                'rank_two_claimed_status' => Status::RANK_NOT_SATISFIED,
+                'rank_three_status' => Status::RANK_PENDING,
+                'rank_three_claimed_status' => Status::RANK_NOT_SATISFIED,
+                'rank_four_status' => Status::RANK_PENDING,
+                'rank_four_claimed_status' => Status::RANK_NOT_SATISFIED,
+                
+            ]
+        );
+
+        // Use the model method to get current claim status
+        $currentClaimStatus = $claimedRankReward->getRankClaimedStatus($rankNumber);
+
+        Log::info('Current claim status', [
+            'user_id' => $user->id,
+            'rank_number' => $rankNumber,
+            'current_status' => $currentClaimStatus
+        ]);
+
+        // Check if reward is already claimed or processing
+        if (in_array($currentClaimStatus, [Status::RANK_CLAIM_PROCESSING, Status::RANK_CLAIM_COMPLETED])) {
+            Log::warning('Reward already claimed or processing', [
+                'status' => $currentClaimStatus
+            ]);
+            return response()->json(['success' => false, 'message' => 'Reward already claimed or in processing'], 403);
+        }
+
+        // Update claim status using a transaction
+        try {
+            DB::beginTransaction();
+
+            $claimedRankReward->setRankClaimedStatus($rankNumber, Status::RANK_CLAIM_PROCESSING);
+            $claimedRankReward->save();
+
+            // Refresh the model to get updated values
+            $claimedRankReward->refresh();
+
+            // Verify the update
+            $verifyStatus = $claimedRankReward->getRankClaimedStatus($rankNumber);
+
+            if ($verifyStatus !== Status::RANK_CLAIM_PROCESSING) {
+                Log::error('Database update verification failed', [
+                    'user_id' => $user->id,
+                    'rank_number' => $rankNumber,
+                    'expected_status' => Status::RANK_CLAIM_PROCESSING,
+                    'actual_status' => $verifyStatus
+                ]);
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to update claim status'
+                ], 500);
+            }
+
+            DB::commit();
+
+            Log::info('Claim status updated successfully', [
+                'user_id' => $user->id,
+                'rank_number' => $rankNumber,
+                'new_status' => $verifyStatus
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rank reward claim is now processing',
+                'claim_status' => [
+                    'can_claim' => false,
+                    'is_achieved' => true,
+                    'status' => 'processing',
+                    'button_text' => 'Reward Processing',
+                    'button_class' => 'btn btn-warning disabled'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Exception during claim process', [
+                'error' => $e->getMessage(),
+                'user_id' => $user->id,
+                'rank_number' => $rankNumber,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to process claim: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function getRankClaimStatus($rank, $user, $claimedRankRewards)
+    {
+        // Get current user's rank number
+        $currentRank = $user->current_rank_id ? Rank::find($user->current_rank_id) : null;
+        $currentRankNumber = $currentRank ? $currentRank->rank : 0;
+        
+        $hasAchievedRank = $currentRankNumber >= $rank->rank;
+
+        if (!$hasAchievedRank) {
+            return [
+                'can_claim' => false,
+                'is_achieved' => false,
+                'status' => 'not_achieved',
+                'button_text' => 'Not Achieved',
+                'button_class' => 'btn btn-secondary disabled'
+            ];
+        }
+
+        if (!$claimedRankRewards) {
+            return [
+                'can_claim' => true,
+                'is_achieved' => true,
+                'status' => 'pending',
+                'button_text' => 'Claim Reward',
+                'button_class' => 'btn btn-success claim-btn'
+            ];
+        }
+
+        $claimStatus = $claimedRankRewards->getRankClaimedStatus($rank->rank);
+
+        $statusMap = [
+            Status::RANK_NOT_SATISFIED => [
+                'can_claim' => true,
+                'is_achieved' => true,
+                'status' => 'pending',
+                'button_text' => 'Claim Reward',
+                'button_class' => 'btn btn-success claim-btn'
+            ],
+            Status::RANK_CLAIM_PENDING => [
+                'can_claim' => true,
+                'is_achieved' => true,
+                'status' => 'pending',
+                'button_text' => 'Claim Reward',
+                'button_class' => 'btn btn-success claim-btn'
+            ],
+            Status::RANK_CLAIM_PROCESSING => [
+                'can_claim' => false,
+                'is_achieved' => true,
+                'status' => 'processing',
+                'button_text' => 'Reward Processing',
+                'button_class' => 'btn btn-warning disabled'
+            ],
+            Status::RANK_CLAIM_COMPLETED => [
+                'can_claim' => false,
+                'is_achieved' => true,
+                'status' => 'completed',
+                'button_text' => ' Reward Claimed',
+                'button_class' => 'btn btn-primary disabled'
+            ],
+            Status::RANK_CLAIM_CANCELED => [
+                'can_claim' => false,
+                'is_achieved' => true,
+                'status' => 'canceled',
+                'button_text' => 'Reward Canceled',
+                'button_class' => 'btn btn-danger disabled'
+            ]
+        ];
+
+        return $statusMap[$claimStatus] ?? [
+            'can_claim' => true,
+            'is_achieved' => true,
+            'status' => 'pending',
+            'button_text' => 'Claim Reward',
+            'button_class' => 'btn btn-success claim-btn'
+        ];
+    }
+
 }
