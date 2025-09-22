@@ -176,4 +176,12 @@ class Status
     const TRAINING_COMPLETED = 2;
     const TRAINING_REJECTED = 3; 
 
+    // claimed rank requirements
+    const RANK_PENDING = 0;
+    const RANK_ACHIEVED = 1;
+    const RANK_NOT_SATISFIED = 0;
+    const RANK_CLAIM_PENDING = 1;
+    const RANK_CLAIM_PROCESSING = 2; // after user claimed the rank rewards
+    const RANK_CLAIM_COMPLETED = 3;
+    const RANK_CLAIM_CANCELED = 4;
 }
