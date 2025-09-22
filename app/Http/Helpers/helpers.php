@@ -2,10 +2,12 @@
 
 use App\Constants\Status;
 use App\Lib\GoogleAuthenticator;
+use App\Models\ClaimedRankReward;
 use App\Models\Extension;
 use App\Models\Frontend;
 use App\Models\GeneralSetting;
 use App\Models\PurchaseHistory;
+use App\Models\Rank;
 use App\Models\RankRequirement;
 use App\Models\UserRankDetail;
 use Carbon\Carbon;
@@ -964,8 +966,6 @@ function processEmployeePackageActivations($user_id)
             $activation->payment_status = Status::PAYMENT_SUCCESS;
             $activation->save();
 
-
-
             $companyAccount = User::where('username', 'sljob')->first();
             Transaction::create([
                 'user_id' => $companyAccount->id,
@@ -979,8 +979,6 @@ function processEmployeePackageActivations($user_id)
             ]);
             $companyAccount->balance += $companyCommision;
             $companyAccount->save();
-
-
 
             $refUser = User::find($user->referred_user_id);
             if ($refUser) {
@@ -997,9 +995,6 @@ function processEmployeePackageActivations($user_id)
 
                 $refUser->balance += $refferdUserCommission;
                 $refUser->save();
-
-
-
 
                 if ($refUser && $refUser->referred_user_id !== null) {
 
@@ -1116,39 +1111,68 @@ function updateUserRankRequirements()
     }
 }
 
-function updateUserRanks()
+function updateUserRanks(): void
 {
     $users = User::all();
+    $rankRequirements = RankRequirement::join('ranks', 'rank_requirements.rank_id', '=', 'ranks.id')
+        ->orderBy('ranks.rank', 'desc')
+        ->select('rank_requirements.*', 'ranks.rank as rank_level')
+        ->get();
 
     foreach ($users as $user) {
         $rankDetail = UserRankDetail::where('user_id', $user->id)->first();
-
-        if (!$rankDetail) {
+        if (!$rankDetail)
             continue;
-        }
 
-        $atLeastOneProductPurchase = PurchaseHistory::where('customer_id', $user->id)
+        $hasPurchase = PurchaseHistory::where('customer_id', $user->id)
             ->where('payment_status', Status::PAYMENT_SUCCESS)
             ->exists();
 
-        $rankRequirements = RankRequirement::orderBy('rank_id', 'desc')->get();
-
         foreach ($rankRequirements as $requirement) {
-            $meetsUserCounts =
-                $rankDetail->level_one_user_count   >= $requirement->level_one_user_count &&
-                $rankDetail->level_two_user_count   >= $requirement->level_two_user_count &&
+            $meetsUserCounts = $rankDetail->level_one_user_count >= $requirement->level_one_user_count &&
+                $rankDetail->level_two_user_count >= $requirement->level_two_user_count &&
                 $rankDetail->level_three_user_count >= $requirement->level_three_user_count &&
-                $rankDetail->level_four_user_count  >= $requirement->level_four_user_count;
+                $rankDetail->level_four_user_count >= $requirement->level_four_user_count;
 
-            $meetsPurchase = !$requirement->required_at_least_one_product_purchase || $atLeastOneProductPurchase;
+            $meetsPurchase = !$requirement->required_at_least_one_product_purchase || $hasPurchase;
 
-            if ($meetsUserCounts && $meetsPurchase) {
-                if ($rankDetail->current_rank_id != $requirement->rank_id) {
-                    $rankDetail->current_rank_id = $requirement->rank_id;
-                    $rankDetail->save();
-                }
+            if ($meetsUserCounts && $meetsPurchase && $rankDetail->current_rank_id != $requirement->rank_id) {
+                $rankDetail->current_rank_id = $requirement->rank_id;
+                $rankDetail->save();
+
+                updateRankRewards($user->id, $requirement->rank_level, $requirement->rank_id);
                 break;
             }
         }
     }
+}
+
+function updateRankRewards(int $userId, int $rankLevel, int $newRankId): void
+{
+    $reward = ClaimedRankReward::firstOrNew(['user_id' => $userId]);
+
+    for ($i = 1; $i <= $rankLevel; $i++) {
+        $statusField = "rank_" . numberToWord($i) . "_status";
+        $claimField = "rank_" . numberToWord($i) . "_claimed_status";
+
+        if ($reward->$statusField == Status::RANK_PENDING) {
+            $reward->$statusField = Status::RANK_ACHIEVED;
+            $reward->$claimField = Status::RANK_CLAIM_PENDING;
+        }
+    }
+
+    $reward->current_rank_id = $newRankId;
+    $reward->save();
+}
+
+function numberToWord(int $num): string
+{
+    return ['', 'one', 'two', 'three', 'four'][$num];
+}
+
+function updateClaimedRankRewards()
+{
+    $users = User::all();
+
+
 }

@@ -170,7 +170,9 @@
                                     data-offstyle="-danger" name="required_at_least_one_product_purchase"
                                     id="required_at_least_one_product_purchase" data-off="@lang('Disabled')"
                                     class="form-check-input" data-bs-toggle="toggle" data-on="@lang('Enable')"
-                                    {{ $rankDetail->required_at_least_one_product_purchase == 1 ? 'checked' : '' }}>
+                                    @if(isset($rankDetail))
+                                    {{ $rankDetail?->required_at_least_one_product_purchase == 1 ? 'checked' : '' }}
+                                    @endif>
                             </div>
                         </div>
 
