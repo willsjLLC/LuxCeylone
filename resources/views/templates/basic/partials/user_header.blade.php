@@ -116,9 +116,9 @@
         <li><a href="{{ route('user.wallet') }}" class="text-light"><i class="las la-wallet"></i> Wallet</a></li>
 
 
-        <li><a href="{{ route('user.training.index') }}" class="text-light"><i class="las la-chalkboard-teacher"></i>
+        {{-- <li><a href="{{ route('user.training.index') }}" class="text-light"><i class="las la-chalkboard-teacher"></i>
                 Training</a>
-        </li>
+        </li> --}}
 
         <a href="{{ route('user.referral.index') }}" class="text-light"><i class="la la-users"></i> Affiliates</a>
         </li>

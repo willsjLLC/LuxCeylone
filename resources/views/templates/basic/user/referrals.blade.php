@@ -133,7 +133,7 @@
 
         <!-- Add this button above the My Levels section -->
         <div class="row">
-            <div class="order-3 col-12">
+            <div class="order-3 col-6">
                 @php
                     $hasLevelsWithUsers = false;
                     foreach ($allLevels as $level => $levelUsers) {
@@ -151,6 +151,12 @@
                         </button>
                     </div>
                 @endif
+            </div>
+            <div class="order-3 col-6">
+                <div class="text-center mb-3">
+                    <button class="btn view-referral-btn">
+                       <a href="{{ route('user.training.index') }}" class="text-light"><i class="las la-chalkboard-teacher"></i> Training</a>
+                </button>
             </div>
         </div>
 
