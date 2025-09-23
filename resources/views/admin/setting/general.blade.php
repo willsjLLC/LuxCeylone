@@ -93,9 +93,23 @@
                             <div class="col-xl-3 col-sm-6">
                                 <div class="form-group">
                                     <label>@lang('User Recursive Top-Up Range')</label>
-                                    <input class="form-control" type="text" step="any" name="user_recursive_top_up_range"
-                                        required value="{{ getValue('USER_RECURSIVE_TOP_UP_RANGE') }}"
+                                    <input class="form-control" type="text" step="any"
+                                        name="user_recursive_top_up_range" required
+                                        value="{{ getValue('USER_RECURSIVE_TOP_UP_RANGE') }}"
                                         placeholder="@lang('User Recursive Top-Up Range')">
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-sm-6">
+                                <div class="form-group">
+                                    <label>@lang('Product Delivery Chargers')</label>
+                                    <div class="input-group mb-3">
+                                        <input class="form-control" type="number" min="1"
+                                            name="product_delivery_chargers" required
+                                            value="{{ getValue('PRODUCT_DELIVERY_CHARGERS') ?? 400 }}"
+                                            placeholder="@lang('Product Delivery Chargers')">
+                                        <span class="input-group-text">{{ gs('cur_text') }}</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -262,157 +276,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-
-                            {{-- <hr> --}}
-
-                            {{-- <h4 class="mb-2">Package Activation Commissions</h4>
-
-                            <h5 class="mb-2">Company Commissions</h5>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Commission For Company')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_commission_for_company" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_COMMISSION_FOR_COMPANY') }}"
-                                        placeholder="@lang('Package Activation Commission For Company')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Expenses Commission For Company')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_expenses_commission_for_company" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_EXPENSES_COMMISSION_FOR_COMPANY') }}"
-                                        placeholder="@lang('Package Activation Expenses Commission For Company')">
-                                </div>
-                            </div>
-
-                            <h5 class="mb-2">Customer Commissions</h5>
-                            <br>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Cash Commission For Users')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_cash_commission_for_users" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_CASH_COMMISSION_FOR_USERS') }}"
-                                        placeholder="@lang('Package Activation Cash Commission For Users')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Voucher Commission For Users')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_voucher_commission_for_users" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_VOUCHER_COMMISSION_FOR_USERS') }}"
-                                        placeholder="@lang('Package Activation Voucher Commission For Users')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Festival Commission For Users')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_festival_commission_for_users" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_FESTIVAL_COMMISSION_FOR_USERS') }}"
-                                        placeholder="@lang('Package Activation Festival Commission For Users')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Saving Commission For Users')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_saving_commission_for_users" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_SAVING_COMMISSION_FOR_USERS') }}"
-                                        placeholder="@lang('Package Activation Saving Commission For Users')">
-                                </div>
-                            </div>
-
-                            <h5 class="mb-2 mt-2">Leader Commissions</h5>
-                            <br>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Bonus For Leader')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_bonus_for_leader" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_BONUS_FOR_LEADER') }}"
-                                        placeholder="@lang('Package Activation Bonus For Leader')">
-                                </div>
-                            </div>
-
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Vehicle Leasing Commission For Leader')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_vehicle_leasing_commission_for_leader" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_VEHICLE_LEASING_COMMISSION_FOR_LEADER') }}"
-                                        placeholder="@lang('Package Activation Vehicle Leasing Commission For Leader')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Petrol Commission For Leader')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_petrol_commission_for_leader" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_PETROL_COMMISSION_FOR_LEADER') }}"
-                                        placeholder="@lang('Package Activation Petrol Commission For Leader')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Max Referral Complete To Car')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="max_referral_complete_to_car" required
-                                        value="{{ getValue('MAX_REFERRAL_COMPLETE_TO_CAR') }}"
-                                        placeholder="@lang('Max Referral Complete To Car')">
-                                </div>
-                            </div>
-
-                            <h5 class="mb-2 mt-2">Top 10 Leaders Commissions</h5>
-                            <br>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Car Commission For Selected Leader')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_car_commission_for_selected_leader" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_CAR_COMMISSION_FOR_SELECTED_LEADER') }}"
-                                        placeholder="@lang('Package Activation Car Commission For Selected Leader')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation House Commission For Selected Leader')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_house_commission_for_selected_leader" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_HOUSE_COMMISSION_FOR_SELECTED_LEADER') }}"
-                                        placeholder="@lang('Package Activation House Commission For Selected Leader')">
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-sm-6 mt-2">
-                                <div class="form-group">
-                                    <label>@lang('Package Activation Expenses Commission For Selected Leader')</label>
-                                    <input class="form-control" type="number" min="0" step="any"
-                                        name="package_activation_expenses_commission_for_selected_leader" required
-                                        value="{{ getValue('PACKAGE_ACTIVATION_EXPENSES_COMMISSION_FOR_SELECTED_LEADER') }}"
-                                        placeholder="@lang('Package Activation Expenses Commission For Selected Leader')">
-                                </div>
-                            </div>
- --}}
-
-
-
 
                         </div>
 

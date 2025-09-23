@@ -73,6 +73,7 @@ class GeneralSettingController extends Controller
 
             'voucher_remaining_date' => 'required|integer',
             'user_recursive_top_up_range' => 'required|integer',
+            'product_delivery_chargers' => 'required|integer'
 
         ]);
 
@@ -125,6 +126,7 @@ class GeneralSettingController extends Controller
         KeyValuePair::updateOrCreate(['key' => 'CHRISTIAN_BONUS_TO'], ['value' => $request->christian_bonus_to]);
         KeyValuePair::updateOrCreate(['key' => 'VOUCHER_REMAINING_DATE'], ['value' => $request->voucher_remaining_date]);
         KeyValuePair::updateOrCreate(['key' => 'USER_RECURSIVE_TOP_UP_RANGE'], ['value' => $request->user_recursive_top_up_range]);
+        KeyValuePair::updateOrCreate(['key' => 'PRODUCT_DELIVERY_CHARGERS'], ['value' => $request->product_delivery_chargers]);
 
         $timezoneFile = config_path('timezone.php');
         $content = '<?php $timezone = "' . $timezone . '" ?>';

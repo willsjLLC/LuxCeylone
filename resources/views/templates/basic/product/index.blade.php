@@ -312,6 +312,10 @@
                                                     @else
                                                         <p class="current-price">LKR {{ $product->original_price }}</p>
                                                     @endif
+
+                                                    <small class="text-muted d-block">
+                                                        Delivery: LKR {{ $productDeliveryChargers }}
+                                                    </small>
                                                 </div>
                                             </div>
 
