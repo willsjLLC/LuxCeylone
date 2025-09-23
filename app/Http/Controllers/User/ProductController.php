@@ -24,6 +24,8 @@ class ProductController extends Controller
         $pageTitle = 'All Products';
         $search = $request->search;
 
+        $productDeliveryChargers = getValue('PRODUCT_DELIVERY_CHARGERS');
+
         // Get categories with their subcategories and products
         $query = ProductCategory::with([
             'productSubcategories' => function ($query) use ($search) {
@@ -105,7 +107,7 @@ class ProductController extends Controller
         return view('Template::product.index', compact('pageTitle', 'categories', 'allCategories', 'search', 'promotion_banner','needsTopUp',
             'isPackageActive',
             'skippedPackages',
-            'outstandingTopUpAmount'));
+            'outstandingTopUpAmount', 'productDeliveryChargers'));
     }
 
     public function productDetails($id)
@@ -121,9 +123,11 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
+        $productDeliveryChargers = getValue('PRODUCT_DELIVERY_CHARGERS');
+
         $pageTitle = $product->name;
 
-        return view('Template::product.details', compact('pageTitle', 'product', 'smilerProducts'));
+        return view('Template::product.details', compact('pageTitle', 'product', 'smilerProducts', 'productDeliveryChargers'));
     }
 
     public function showCategoryProducts($categoryName, Request $request)

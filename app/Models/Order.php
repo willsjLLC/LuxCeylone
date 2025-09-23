@@ -28,7 +28,9 @@ class Order extends Model
         'zip',
         'city',
         'country',
-        'delivery_stats'
+        'delivery_stats',
+        'delivery_method',
+        'delivery_charge',
     ];
 
     /**

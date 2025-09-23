@@ -564,11 +564,11 @@ class PaymentController extends Controller
                 }
             }
 
-            Log::info('ref level count'. $referralLevel);
+            Log::info('ref level count' . $referralLevel);
 
             // Handle incomplete referral tree
             if ($referralLevel < self::MAX_REFERRAL_LEVELS) {
-                Log::info('working=' .$referralLevel );
+                Log::info('working=' . $referralLevel);
                 $remainingCommission = $totalCustomerCommission - $distributedCommission;
                 if ($remainingCommission > 0) {
                     $companyAccount->increment('balance', $remainingCommission);
@@ -1106,6 +1106,7 @@ class PaymentController extends Controller
     // start of PO cash distribution
     public function purchaseOrder(Request $request, $order_id)
     {
+
         $useBonus = false;
         if (isset($request->use_bonus) && $request->use_bonus == 'on') {
             $useBonus = true;
@@ -1113,6 +1114,14 @@ class PaymentController extends Controller
 
         $order = Order::with('orderItems.product.productPurchaseCommission')->findOrFail($order_id);
         $user = auth()->user();
+
+        $productDeliveryChargers = getValue('PRODUCT_DELIVERY_CHARGERS');
+
+        if ($request->delivery_method == 'door_step') {
+            $order->net_total = $order->net_total + $productDeliveryChargers;
+        } else {
+            $productDeliveryChargers = 0;
+        }
 
         $walletBalance = $user->balance ?? 0;
         $orderTotal = $order->net_total;
@@ -1203,6 +1212,8 @@ class PaymentController extends Controller
                 'amount_paid' => $order->net_total,
                 'discount' => $order->discount,
                 'currency' => 'LKR',
+                'delivery_method' => $request->delivery_method,
+                'delivery_charge' => $productDeliveryChargers
             ]);
 
             // $user->decrement('balance', $order->net_total);
@@ -1219,7 +1230,9 @@ class PaymentController extends Controller
                 'shipping_address' => $request->address,
                 'zip' => $request->zip,
                 'city' => $request->city,
-                'country' => $request->country
+                'country' => $request->country,
+                'delivery_method' => $request->delivery_method,
+                'delivery_charge' => $productDeliveryChargers
             ]);
 
             $total_profit = 0;
