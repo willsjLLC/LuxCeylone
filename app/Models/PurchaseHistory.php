@@ -18,6 +18,8 @@ class PurchaseHistory extends Model
         'total_purchase_did',
         'payment_method',
         'payment_status',
+        'delivery_method',
+        'delivery_charge',
         'total_amount',
         'amount_paid',
         'discount',
