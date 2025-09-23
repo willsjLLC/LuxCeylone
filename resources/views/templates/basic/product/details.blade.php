@@ -1,4 +1,3 @@
-
 @extends($activeTemplate . 'layouts.master')
 @section('panel')
     @include('partials.preloader')
@@ -11,20 +10,15 @@
                         @if ($product->images && $product->images->count() > 0)
                             @foreach ($product->images as $index => $image)
                                 <img src="{{ asset('assets/admin/images/product/' . $image->image) }}"
-                                    class="product-image {{ $index == 0 ? 'active' : '' }}"
-                                    data-index="{{ $index }}"
+                                    class="product-image {{ $index == 0 ? 'active' : '' }}" data-index="{{ $index }}"
                                     alt="{{ $product->name }} - Image {{ $index + 1 }}">
                             @endforeach
                         @elseif ($product->image_url)
                             <img src="{{ asset('assets/admin/images/product/' . $product->image_url) }}"
-                                class="product-image active"
-                                data-index="0"
-                                alt="{{ $product->name }}">
+                                class="product-image active" data-index="0" alt="{{ $product->name }}">
                         @else
-                            <img src="{{ asset('assets/admin/images/empty.png') }}"
-                                class="product-image active"
-                                data-index="0"
-                                alt="product image">
+                            <img src="{{ asset('assets/admin/images/empty.png') }}" class="product-image active"
+                                data-index="0" alt="product image">
                         @endif
 
                         <!-- Navigation arrows -->
@@ -38,7 +32,8 @@
                     <div class="product-thumbnails">
                         @if ($product->images && $product->images->count() > 0)
                             @foreach ($product->images as $index => $image)
-                                <div class="product-thumbnail {{ $index == 0 ? 'active' : '' }}" data-index="{{ $index }}">
+                                <div class="product-thumbnail {{ $index == 0 ? 'active' : '' }}"
+                                    data-index="{{ $index }}">
                                     <img src="{{ asset('assets/admin/images/product/' . $image->image) }}"
                                         alt="{{ $product->name }} - Thumbnail {{ $index + 1 }}">
                                 </div>
@@ -50,8 +45,7 @@
                             </div>
                         @else
                             <div class="product-thumbnail active" data-index="0">
-                                <img src="{{ asset('assets/admin/images/empty.png') }}"
-                                    alt="product image">
+                                <img src="{{ asset('assets/admin/images/empty.png') }}" alt="product image">
                             </div>
                         @endif
                     </div>
@@ -63,7 +57,8 @@
                     <div class="mb-2 d-flex justify-content-between align-items-center">
                         <h1 class="mb-0 product-title">{{ $product->name }}</h1>
                         <div class="card-fav">
-                            <i class="far text-dark fa-heart favorite-icon fa-lg" data-product-id="{{ $product->id }}"></i>
+                            <i class="far text-dark fa-heart favorite-icon fa-lg"
+                                data-product-id="{{ $product->id }}"></i>
                         </div>
                     </div>
 
@@ -97,7 +92,8 @@
 
                     <div class="mt-4 mb-4 d-flex flex-column product-price">
                         @if ($product->discount == 0)
-                            <h3 class="p-0 detail-text text-success">LKR {{ number_format($product->original_price, 2) }}</h3>
+                            <h3 class="p-0 detail-text text-success">LKR {{ number_format($product->original_price, 2) }}
+                            </h3>
                         @else
                             <div>
                                 <h3 class="p-0 detail-text text-danger"><del>LKR
@@ -110,6 +106,9 @@
                                 </h3>
                             </div>
                         @endif
+                        <small class="text-muted d-block">
+                            Delivery: LKR {{ $productDeliveryChargers }}
+                        </small>
                     </div>
 
                     <div class="mb-4 product-description">
@@ -120,7 +119,8 @@
         </div>
 
         <!-- Image Preview Modal -->
-        <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+        <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -147,7 +147,7 @@
 
         <br><br><br>
         <div id="productContainer">
-           <h4 class="mb-3">Similar Products</h4>
+            <h4 class="mb-3">Similar Products</h4>
             <div class="mb-5 category-section">
                 <div class="scroll-container">
                     @forelse($smilerProducts as $product)
@@ -178,19 +178,23 @@
                                         <h6 class="mb-1 card-text small">{{ intval($product->weight) }}
                                             {{ $product->unit }}</h6>
 
-                                            <div class="product-price">
-                                                @if ($product->discount > 0 && $product->original_price > $product->selling_price)
-                                                    <p class="mb-0 text-danger"><del>LKR
-                                                            {{ $product->original_price }}</del></p>
-                                                    <p class="mb-1 text-success fw-bold">LKR
-                                                        {{ $product->selling_price }}
-                                                    </p>
-                                                @else
-                                                    <p class="mb-1 text-success fw-bold">LKR
-                                                        {{ $product->original_price }}
-                                                    </p>
-                                                @endif
-                                            </div>
+                                        <div class="product-price">
+                                            @if ($product->discount > 0 && $product->original_price > $product->selling_price)
+                                                <p class="mb-0 text-danger"><del>LKR
+                                                        {{ $product->original_price }}</del></p>
+                                                <p class="mb-1 text-success fw-bold">LKR
+                                                    {{ $product->selling_price }}
+                                                </p>
+                                            @else
+                                                <p class="mb-1 text-success fw-bold">LKR
+                                                    {{ $product->original_price }}
+                                                </p>
+                                            @endif
+                                        </div>
+
+                                        <small class="text-muted d-block">
+                                            Delivery: LKR {{ $productDeliveryChargers }}
+                                        </small>
                                     </div>
                                 </a>
 
@@ -334,36 +338,40 @@
             background-color: #f9f9f9;
         }
 
-        
-         @media(min-width:768px){
+
+        @media(min-width:768px) {
             #modalImage {
                 padding: 40px 10px;
                 max-height: 60vh;
                 object-fit: contain;
             }
+
             #imagePreviewModal .modal-dialog {
                 max-height: 500px;
                 height: 500px;
             }
+
             #imagePreviewModal .modal-content {
                 height: 80%;
                 display: flex;
                 flex-direction: column;
             }
         }
-        @media(min-width:567px){
-            .modal-nav-buttons{
-                flex-direction:row;
-            }
-        }
-        @media(max-width:566px){
-            .modal-nav-buttons{
-                flex-direction:column;
-                gap:5px;
+
+        @media(min-width:567px) {
+            .modal-nav-buttons {
+                flex-direction: row;
             }
         }
 
-        @media(max-width:767px){
+        @media(max-width:566px) {
+            .modal-nav-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        @media(max-width:767px) {
             #modalImage {
                 padding: 0 10px;
                 max-height: 60vh;
@@ -374,11 +382,13 @@
                 max-height: 400px;
                 height: 400px;
             }
+
             #imagePreviewModal .modal-content {
                 display: flex;
                 flex-direction: column;
             }
         }
+
         .modal-nav-buttons {
             width: 100%;
             display: flex;
@@ -416,7 +426,7 @@
             padding: 5px 10px;
             background-color: #00b300;
             border: 1px solid #e0e0e0;
-            color:white;
+            color: white;
             text-align: center;
             text-decoration: none;
             font-size: 14px;
@@ -458,7 +468,7 @@
                 font-size: 12px;
             }
 
-            .product-title{
+            .product-title {
                 font-size: 20px;
             }
 
@@ -612,7 +622,8 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        if (response.status === 'added') {} else if (response.status === 'removed') {}
+                        if (response.status === 'added') {} else if (response.status ===
+                            'removed') {}
                     },
                     error: function(xhr) {
                         console.error('Error occurred while toggling the favorite status');
@@ -653,7 +664,7 @@
     </script>
 
 
-<style>
+    <style>
         .add-to-cart-section {
             justify-content: left;
         }
@@ -672,12 +683,13 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
         }
+
         .add-to-cart {
             align-self: flex-end;
             padding: 5px 10px;
             background-color: #00b300;
             border: 1px solid #e0e0e0;
-            color:white;
+            color: white;
             text-align: center;
             text-decoration: none;
             font-size: 14px;
@@ -719,9 +731,11 @@
                 font-size: 12px;
             }
 
-            .product-title{
+            .product-title {
                 font-size: 20px;
-            },
+            }
+
+            ,
             .current-price {
                 font-size: 30px;
             }
@@ -784,9 +798,10 @@
             transform: translateY(-5px);
         }
 
-        .product-title{
-                font-size: 25px;
-            }
+        .product-title {
+            font-size: 25px;
+        }
+
         .product-image-container {
             height: 200px;
             overflow: hidden;
@@ -794,6 +809,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .product-image {
             width: 100%;
             height: 100%;
@@ -1032,5 +1048,5 @@
             background-color: #ccc;
             border-radius: 4px;
         }
-</style>
+    </style>
 @endpush

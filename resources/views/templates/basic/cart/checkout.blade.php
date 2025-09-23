@@ -11,37 +11,71 @@
                 $totalPrice = array_sum(array_column($currentOrderItems, 'price'));
             @endphp
 
-            <div class="order-card">
-                <div class="order-header">
-                    <span class="item-name">Product Name</span>
-                    <span class="item-price">Price</span>
-                    <span class="item-quantity">Qty</span>
-                    <span class="item-discount">Discount</span>
-                    <span class="item-total">Total</span>
-                </div>
+            <div class="items">
+                <div class="table-responsive">
+                    <table class="order-items-table">
+                        <thead>
+                            <tr>
+                                <th class="product-name">Product</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Discount</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order_items as $order_item)
+                                <tr>
+                                    <td class="product-name">
+                                        <div class="product-name-wrapper">
+                                            {{ $order_item->product_name }}
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="mobile-label">Price:</span>
+                                        LKR {{ number_format($order_item->original_price, 2) }}
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="mobile-label">Qty:</span>
+                                        {{ $order_item->quantity }}
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="mobile-label">Discount:</span>
+                                        LKR {{ number_format($order_item->discount, 2) }}
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="mobile-label">Total:</span>
+                                        LKR {{ number_format($order_item->net_total, 2) }}
+                                    </td>
+                                </tr>
+                            @endforeach
 
-                @foreach ($order_items as $order_item)
-                    <div class="order-item">
-                        <span class="product-name">{{ $order_item->product_name }}</span>
-                        <span class="product-price">LKR {{ number_format($order_item->original_price, 2) }}</span>
-                        <span class="product-quantity">{{ $order_item->quantity }}</span>
-                        <span class="product-discount">LKR {{ $order_item->discount }}</span>
-                        <span class="product-total">LKR {{ number_format($order_item->net_total, 2) }}</span>
-                    </div>
-                @endforeach
+                            <tr class="delivery-charge-row" style="display: none;">
+                                <td colspan="2" class="text-end">Delivery Charge</td>
+                                <td colspan="3" class="text-end">
+                                    LKR {{ number_format($productDeliveryChargers, 2) }}
+                                </td>
+                            </tr>
 
-                <div class="total-section">
-                    <strong>NET TOTAL:</strong>
-                    <span class="total-price">LKR {{ number_format($order->net_total, 2) }}</span>
+                            <tr class="net-total-row">
+                                <td colspan="2" class="text-end fw-bold">Net Total</td>
+                                <td colspan="3" class="fw-bold text-end">
+                                    LKR {{ number_format($order->net_total, 2) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
+
+
         </div>
 
         <div class="order-payments">
             <div class="order-tabs">
                 <span class="tab active" data-tab="bank">PAY BY WALLET</span>
                 <span class="tab" data-tab="koko">KOKO</span>
-                {{-- <span class="tab" data-tab="crypto">CREDIT/DEBIT</span> --}}
             </div>
         </div>
 
@@ -55,6 +89,25 @@
                             <form class="register" action="{{ route('user.deposit.customer.purchase.order', $order->id) }}"
                                 method="post">
                                 @csrf
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Choose Delivery Method</label>
+                                    <div class="form-check ms-3">
+                                        <input class="form-check-input" type="radio" name="delivery_method" id="pickup"
+                                            value="pickup" required>
+                                        <label class="form-check-label text-secondary" for="pickup">
+                                            Hand Pickup
+                                        </label>
+                                    </div>
+                                    <div class="form-check ms-3">
+                                        <input class="form-check-input" type="radio" name="delivery_method" id="door_step"
+                                            value="door_step" checked>
+                                        <label class="form-check-label text-secondary" for="door_step">
+                                            Doorstep Delivery ( Charge: LKR: {{ $productDeliveryChargers }} )
+                                        </label>
+                                    </div>
+                                </div>
+
                                 <div class="row g-3">
                                     <div class="form-group col-md-6">
                                         <label class="form-label">First Name</label>
@@ -126,94 +179,11 @@
                                         </select>
                                     </div>
                                 </div>
-                                {{-- 
-                                <div class="mt-4 text-white rounded wallet-section bg-gradient text-end"
-                                    style="background: linear-gradient(135deg, #28a745, #218838);">
-                                    <div class="gap-2 d-flex flex-column align-items-end">
-                                        <h4 class="mb-2">Wallet Balance</h4>
-                                        <h3 class="mb-0 fw-bold">{{ showAmount(auth()->user()->balance) }}</h3>
-                                    </div>
-                                    <hr class="my-3 border-light">
-
-                            
-                                    @if ($fullyFestival)
-                                        <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                            title="Try With Festival Bonus"
-                                            class="px-4 py-2 shadow-sm btn btn-light text-success fw-bold w-100">
-                                            <i class="las la-shopping-cart"></i> Pay Now
-
-                                        </button>
-                                    @elseif($withVoucher)
-                                        <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                            title="Try With Festival & Voucher Bonus"
-                                            class="px-4 py-2 shadow-sm btn btn-light text-success fw-bold w-100">
-                                            <i class="las la-shopping-cart"></i> Pay Now
-
-                                        </button>
-                                    @elseif($withVoucherMain)
-                                        <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                            title="Try With Festival Bonus + Voucher Balance & Wallet"
-                                            class="px-4 py-2 shadow-sm btn btn-light text-success fw-bold w-100">
-                                            <i class="las la-shopping-cart"></i> Pay Now
-
-                                        </button>
-                                    @elseif($fullyVoucher)
-                                        <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                            title="Try With Voucher Bonus"
-                                            class="px-4 py-2 shadow-sm btn btn-light text-success fw-bold w-100">
-                                            <i class="las la-shopping-cart"></i> Pay Now
-
-                                        </button>
-                                    @elseif($voucherMain)
-                                        <button type="submit" data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="Try With Voucher Bonus & Wallet Balance"
-                                            class="px-4 py-2 shadow-sm btn btn-light text-success fw-bold w-100">
-                                            <i class="las la-shopping-cart"></i> Pay Now
-                                        </button>
-                                    @elseif($mainOnly)
-                                        <button type="submit" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                            title="Pay Now"
-                                            class="px-4 py-2 shadow-sm btn btn-light text-success fw-bold w-100">
-                                            <i class="las la-shopping-cart"></i> Pay Now
-                                        </button>
-                                    @else
-                                        <p class="mb-2 text-danger">You can't complete this payment right now. Please top
-                                            up
-                                            your wallet.</p>
-                                        <button type="submit"
-                                            class="px-4 py-2 shadow-sm opacity-50 btn btn-light text-success fw-bold w-100"
-                                            disabled>
-                                            <i class="las la-shopping-cart"></i> Pay Now
-                                        </button>
-                                    @endif
-                                </div> --}}
 
                                 @php
-                                    $hasBonusOptions =
-                                        // $fullyFestival ||
-                                        // $withVoucher ||
-                                        // $withMain ||
-                                        // $withVoucherMain ||
-                                        $fullyVoucher ||
-                                        $voucherMain;
+                                    $hasBonusOptions = $fullyVoucher || $voucherMain;
 
                                     $bonusDescription = [];
-
-                                    // if ($fullyFestival) {
-                                    //     $bonusDescription[] = 'Festival Bonus';
-                                    // }
-
-                                    // if ($withVoucher) {
-                                    //     $bonusDescription[] = 'Festival + Voucher Bonus';
-                                    // }
-
-                                    // if ($withMain) {
-                                    //     $bonusDescription[] = 'Festival + Wallet Balance';
-                                    // }
-
-                                    // if ($withVoucherMain) {
-                                    //     $bonusDescription[] = 'Festival + Voucher Bonus + Wallet Balance';
-                                    // }
 
                                     if ($fullyVoucher) {
                                         $bonusDescription[] = 'Voucher Bonus';
@@ -227,7 +197,6 @@
                                 <div class="mt-4 text-white rounded wallet-section bg-gradient"
                                     style="background: linear-gradient(135deg, #28a745, #218838);">
                                     <div class="row align-items-start gy-3">
-                                        {{-- Left Side (stacked first on mobile): Bonus --}}
                                         <div class="col-12 col-md-6 text-start">
                                             @if ($hasBonusOptions)
                                                 <div class="form-check mb-3 text-success">
@@ -236,14 +205,13 @@
                                                     <label class="form-check-label" for="useBonus">
                                                         Use available Voucher bonuses
                                                     </label>
-                                                    <div class="small mt-1   text-success">
+                                                    <div class="small mt-1 text-success">
                                                         Available: {{ implode(', ', $bonusDescription) }}
                                                     </div>
                                                 </div>
                                             @endif
                                         </div>
 
-                                        {{-- Right Side: Wallet Balance --}}
                                         <div class="col-12 col-md-6 d-flex flex-column align-items-end">
                                             <h4 class="mb-2">Wallet Balance</h4>
                                             <h3 class="mb-0 fw-bold">{{ showAmount(auth()->user()->balance) }}</h3>
@@ -252,22 +220,10 @@
 
                                     <hr class="my-3 border-light">
 
-                                    @if($hasBonusOptions || $mainOnly)
                                     <button type="submit"
                                         class="px-4 py-2 shadow-sm btn btn-light text-success fw-bold w-100">
                                         <i class="las la-shopping-cart"></i> Pay Now
                                     </button>
-                                    @endif
-                                    
-                                    @unless ($hasBonusOptions || $mainOnly)
-                                        <p class="mb-2 text-danger text-center">You can't complete this payment right now.
-                                            Please top up your wallet.</p>
-                                        <button type="submit"
-                                            class="px-4 py-2 shadow-sm opacity-50 btn btn-light text-success fw-bold w-100"
-                                            disabled>
-                                            <i class="las la-shopping-cart"></i> Pay Now
-                                        </button>
-                                    @endunless
                                 </div>
                             </form>
                         </div>
@@ -276,14 +232,14 @@
             </div>
         </div>
         <div id="koko" class="text-center order-content">
-            {{-- <p>Coming soon...</p> --}}
+
             <div class="col-sm-6 col-8 col-lg-12">
                 <img class="mx-auto mb-5 img-fluid"
                     src="{{ getImage($activeTemplateTrue . 'images/cart/koko_pay.png') }}" alt="@lang('image')">
             </div>
         </div>
         <div id="crypto" class="text-center order-content">
-            {{-- <p>Coming soon...</p> --}}
+
             <div class="col-sm-6 col-8 col-lg-12">
                 <img class="mx-auto mb-5 img-fluid"
                     src="{{ getImage($activeTemplateTrue . 'images/cart/card_pay.png') }}" alt="@lang('image')">
@@ -293,11 +249,16 @@
         <div class="total-summary">
             <div class="paynow">
                 <a href="#" class="checkout-button">
-                    {{-- Purchase Order --}}
+
                 </a>
             </div>
         </div>
     </div>
+
+    <!-- Hidden values for JavaScript -->
+    <input type="hidden" id="order-total" value="{{ $order->net_total }}">
+    <input type="hidden" id="wallet-balance-raw" value="{{ auth()->user()->balance }}">
+    <input type="hidden" id="delivery-charge-amount" value="{{ $productDeliveryChargers }}">
 @endsection
 
 
@@ -313,24 +274,150 @@
 @push('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.tab');
-            const contents = document.querySelectorAll('.order-content');
+            const pickupRadio = document.getElementById('pickup');
+            const doorStepRadio = document.getElementById('door_step');
+            const deliveryChargeRow = document.querySelector('.delivery-charge-row');
+            const netTotalRow = document.querySelector('.net-total-row td:last-child');
+            const payNowButton = document.querySelector('button[type="submit"]');
+            const walletSection = document.querySelector('.wallet-section');
+            const useBonusCheckbox = document.getElementById('useBonus');
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(c => c.classList.remove('active'));
-                    this.classList.add('active');
-                    document.getElementById(this.dataset.tab).classList.add('active');
+            const baseOrderTotal = parseFloat(document.getElementById('order-total').value);
+            const walletBalance = parseFloat(document.getElementById('wallet-balance-raw').value);
+            const deliveryCharge = {{ $productDeliveryChargers }};
+            const hasBonusOptions = {{ $hasBonusOptions ? 'true' : 'false' }};
+            const mainOnly = {{ $mainOnly ? 'true' : 'false' }};
+
+            function canAffordPurchase(totalAmount) {
+                if (hasBonusOptions && useBonusCheckbox && useBonusCheckbox.checked) {
+                    return true;
+                }
+
+                if (mainOnly && walletBalance >= totalAmount) {
+                    return true;
+                }
+
+                return walletBalance >= totalAmount;
+            }
+
+            function updatePaymentState(finalTotal) {
+                const canAfford = canAffordPurchase(finalTotal);
+                const errorMessage = walletSection.querySelector('.insufficient-funds-message');
+
+                if (errorMessage) {
+                    errorMessage.remove();
+                }
+
+                if (canAfford) {
+                    payNowButton.disabled = false;
+                    payNowButton.classList.remove('opacity-50');
+                    payNowButton.innerHTML = '<i class="las la-shopping-cart"></i> Pay Now';
+                } else {
+                    payNowButton.disabled = true;
+                    payNowButton.classList.add('opacity-50');
+                    payNowButton.innerHTML = '<i class="las la-shopping-cart"></i> Pay Now';
+
+                    const insufficientMessage = document.createElement('p');
+                    insufficientMessage.className = 'mb-2 text-danger text-center insufficient-funds-message';
+                    insufficientMessage.textContent =
+                        `Insufficient wallet balance. You need LKR ${(finalTotal - walletBalance).toFixed(2)} more to complete this purchase.`;
+                    payNowButton.parentNode.insertBefore(insufficientMessage, payNowButton);
+                }
+            }
+
+            function updateNetTotal() {
+                let finalTotal = baseOrderTotal;
+
+                if (doorStepRadio.checked) {
+                    deliveryChargeRow.style.display = 'table-row';
+                    finalTotal += deliveryCharge;
+                } else {
+                    deliveryChargeRow.style.display = 'none';
+                }
+
+                netTotalRow.innerHTML = 'LKR ' + finalTotal.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
                 });
+
+                updatePaymentState(finalTotal);
+
+                window.currentFinalTotal = finalTotal;
+            }
+
+            pickupRadio.addEventListener('change', updateNetTotal);
+            doorStepRadio.addEventListener('change', updateNetTotal);
+
+            if (useBonusCheckbox) {
+                useBonusCheckbox.addEventListener('change', function() {
+                    const currentTotal = window.currentFinalTotal || baseOrderTotal;
+                    updatePaymentState(currentTotal);
+                });
+            }
+
+            updateNetTotal();
+        });
+
+        document.querySelector('form.register').addEventListener('submit', function(e) {
+            const doorStepRadio = document.getElementById('door_step');
+            const baseOrderTotal = parseFloat(document.getElementById('order-total').value);
+            const deliveryCharge = {{ $productDeliveryChargers }};
+            const walletBalance = parseFloat(document.getElementById('wallet-balance-raw').value);
+
+            const finalTotal = doorStepRadio.checked ? baseOrderTotal + deliveryCharge : baseOrderTotal;
+
+            const useBonusCheckbox = document.getElementById('useBonus');
+            const hasBonusOptions = {{ $hasBonusOptions ? 'true' : 'false' }};
+            const mainOnly = {{ $mainOnly ? 'true' : 'false' }};
+
+            let canAfford = false;
+
+            if (hasBonusOptions && useBonusCheckbox && useBonusCheckbox.checked) {
+                canAfford = true;
+            } else if (mainOnly && walletBalance >= finalTotal) {
+                canAfford = true;
+            } else if (walletBalance >= finalTotal) {
+                canAfford = true;
+            }
+
+            if (!canAfford) {
+                e.preventDefault();
+                alert(
+                    'Insufficient wallet balance to complete this purchase. Please top up your wallet or use available bonuses.'
+                );
+                return false;
+            }
+
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'final_total';
+            hiddenInput.value = finalTotal;
+            this.appendChild(hiddenInput);
+
+            const deliveryInput = document.createElement('input');
+            deliveryInput.type = 'hidden';
+            deliveryInput.name = 'delivery_charge';
+            deliveryInput.value = doorStepRadio.checked ? deliveryCharge : 0;
+            this.appendChild(deliveryInput);
+        });
+
+        const tabs = document.querySelectorAll('.order-tabs .tab');
+        const contents = document.querySelectorAll('.order-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.getAttribute('data-tab');
+
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+
+                document.getElementById(targetTab).classList.add('active');
             });
         });
-
-        document.getElementById('add-mobile-btn').addEventListener('click', function() {
-            document.getElementById('extra-mobile-field').style.display = 'block';
-            this.style.display = 'none';
-        });
     </script>
+
 
     <script>
         "use strict";
@@ -393,6 +480,87 @@
 
     <style>
         .img-fluid {}
+
+        .summary-title {
+            padding-left: 3px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .order-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .order-items-table th,
+        .order-items-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .order-items-table .product-name {
+            text-align: left;
+            max-width: 200px;
+        }
+
+        .order-items-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        .order-items-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .net-total-row {
+            background-color: #e9ecef !important;
+            font-weight: bold;
+        }
+
+        .mobile-label {
+            display: none;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .order-payments {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            margin: 20px 0;
+        }
+
+        .order-tabs {
+            display: flex;
+            gap: 20px;
+        }
+
+        .order-tabs span {
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .order-tabs span.active {
+            background-color: #f6c90e;
+            color: #000;
+        }
+
+        .order-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .order-content.active {
+            display: block;
+        }
 
         .order-payments {
             display: flex;

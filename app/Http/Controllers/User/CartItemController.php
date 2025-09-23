@@ -303,6 +303,8 @@ class CartItemController extends Controller
                 $mainOnly = true;
             }
 
+            $productDeliveryChargers = getValue('PRODUCT_DELIVERY_CHARGERS');
+
             $order_items = OrderItem::where('order_id', $order->id)->get();
             return view('Template::cart.checkout', [
                 'pageTitle' => 'Checkout',
@@ -318,6 +320,7 @@ class CartItemController extends Controller
                 // 'withVoucherMain' =>  $withVoucherMain,
                 'voucherMain' =>  $voucherMain,
                 'mainOnly' =>  $mainOnly,
+                'productDeliveryChargers' => $productDeliveryChargers
             ]);
         } catch (\Exception $e) {
             return $e;
