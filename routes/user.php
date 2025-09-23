@@ -138,6 +138,8 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('details/{id}', 'detail')->name('detail');
                  Route::post('/claim', 'claimRankReward')->name('claim');
+
+                 
             
             });
 

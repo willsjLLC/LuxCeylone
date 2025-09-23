@@ -4,7 +4,7 @@
         <div class="row mt-5">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header bg-gradient-success text-white">
+                    <div class="card-header bg-gradient-primary text-white">
                         <h4 class="mb-0">
                             <i class="fas fa-trophy me-2"></i>{{ $pageTitle }}
                         </h4>
@@ -24,18 +24,11 @@
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <div class="status-card">
-                                    <h6 class="text-success mb-2">Current Status</h6>
+                                    <h6 class="text-white mb-2">Current Status</h6>
                                     <div class="d-flex align-items-center">
-                                        {{-- <div class="status-icon me-3">
-                                            @if ($user->is_golden_user)
-                                                <i class="fas fa-crown text-warning fa-2x"></i>
-                                            @else
-                                                <i class="fas fa-user text-secondary fa-2x"></i>
-                                            @endif
-                                        </div> --}}
+                                        
                                         <div>
-
-                                            <h3 class="text-dark mb-0">
+                                            <h3 class=" mb-0" style="color: orange;">
                                                 {{ $currentRank ? $currentRank->name : 'No Rank' }}
                                             </h3>
                                         </div>
@@ -45,7 +38,7 @@
 
                             <div class="col-md-6">
                                 <div class="text-end">
-                                    <button class="btn btn-outline-success" onclick="showAllRanks()">
+                                    <button class="btn btn-outline-primary" onclick="showAllRanks()">
                                         <i class="fas fa-list me-1"></i>All Ranks
                                     </button>
                                 </div>
@@ -122,7 +115,7 @@
                                     <h6 class="mb-3">
                                         <i class="fas fa-tasks me-2"></i>Requirements for {{ $nextRank->name }}
                                         <span
-                                            class="badge bg-success ms-2">{{ number_format($progressData['progress'], 1) }}%
+                                            class="badge bg-primary ms-2">{{ number_format($progressData['progress'], 1) }}%
                                             Complete</span>
                                     </h6>
 
@@ -180,9 +173,9 @@
         </div>
     </div>
 
-    <div class="modal fade mt-5" id="allRanksModal" tabindex="-1">
+    {{-- <div class="modal fade mt-5" id="allRanksModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
+            <div class="modal-content" style="background: rgba(10, 93, 61, 0.9);">
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="fas fa-trophy me-2"></i>All Ranks Overview
@@ -234,23 +227,85 @@
                 </div>
             </div>
         </div>
+    </div> --}}
+<div class="modal fade mt-5" id="allRanksModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" style="background: #17433c;">
+            <div class="modal-header">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-trophy me-2"></i>All Ranks Overview
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ranks-overview">
+                    @foreach ($ranks as $rank)
+                        <div class="rank-item {{ $currentRank && $rank->id == $currentRank->id ? 'current' : '' }}">
+                            <div class="rank-info-container">
+                                <div class="rank-info"
+                                    onclick="window.location.href='{{ route('user.rank.detail', $rank->id) }}'"
+                                    style="cursor: pointer;">
+                                    <div class="rank-star">
+                                        @for ($i = 1; $i <= $rank->rank; $i++)
+                                            <i class="fas fa-star text-warning"></i>
+                                        @endfor
+                                    </div>
+                                    <div class="rank-details">
+                                        <h5 class="text-white">{{ $rank->name }}</h5>
+                                        <p class="text-muted mb-0">Rank {{ $rank->rank }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="rank-actions">
+                                    @if (isset($rank->claim_status) && $rank->claim_status['is_achieved'])
+                                        @if ($rank->claim_status['can_claim'])
+                                            <button
+                                                class="btn btn-sm {{ $rank->claim_status['button_class'] }} claim-btn"
+                                                data-rank-number="{{ $rank->rank }}"
+                                                onclick="claimRankReward({{ $rank->rank }})">
+                                                {{ $rank->claim_status['button_text'] }}
+                                            </button>
+                                        @else
+                                            <span
+                                                class="btn btn-sm {{ $rank->claim_status['button_class'] }} claim-btn">
+                                                {{ $rank->claim_status['button_text'] }}
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span class="badge bg-secondary">Not Achieved</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
 @endsection
 
 @push('style')
     <style>
+
+        .text-muted {
+            --bs-text-opacity: 1;
+            color: #e9ebed !important;
+        }
         .status-card {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            /* background: linear-gradient(135deg, rgb(135, 178, 219) 0%, rgb(216, 230, 13) 100%); */
+            background: linear-gradient(135deg, #17433c 0%, #0c6b0dff 100%);
             padding: 20px;
             border-radius: 15px;
             color: white;
-            border: 1px solid #28a745;
+            border: 1px solid rgb(230, 176, 15);
         }
+
 
        
         .dd {
-            background: linear-gradient(135deg, #a8e6cf 0%, #7fcdbb 100%);
+            background: linear-gradient(135deg, rgba(25, 132, 54, 1) 0%, rgba(4, 69, 21, 1) 100%);
             padding: 20px;
             border-radius: 15px;
             color: white;
@@ -282,7 +337,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, #12e235ff 0%, #194e05ff 100%);
         }
 
         .rank-icon img {
@@ -293,18 +348,18 @@
         }
 
         .current-rank .rank-icon {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
+            background: linear-gradient(135deg, rgb(237, 237, 240) 0%, rgb(239, 237, 241) 100%);
+            color: white;
             border: 4px solid #fff;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.7);
+            box-shadow: 0 4px 15px rgba(16, 159, 241, 0.7);
         }
 
         .next-rank .rank-icon {
-            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-            color: #0c5460;
+            background: linear-gradient(135deg, rgb(234, 241, 241) 0%, rgb(237, 236, 241) 100%);
+            color: #333;
             border: 4px solid #fff;
             animation: pulse 2s infinite;
-            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.7);
+            box-shadow: 0 4px 15px green;
         }
 
         .future-rank .rank-icon {
@@ -369,7 +424,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #28a745 0%, #20c997 50%, #17a2b8 100%);
+            background: linear-gradient(90deg, #2d7705ff 0%, #094003ff 50%, #05ae2dff 100%);
             border-radius: 4px;
             transition: width 0.8s ease;
             position: relative;
@@ -392,7 +447,7 @@
             top: -35px;
             left:50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, #09a926ff 0%, #033a02ff 100%);
             color: white;
             padding: 6px 12px;
             border-radius: 20px;
@@ -412,7 +467,7 @@
             left: 50%;
             transform: translateX(-50%);
             border: 5px solid transparent;
-            border-top-color: #28a745;
+            border-top-color: #0db074ff;
         }
 
         /* Mobile-specific layout */
@@ -452,7 +507,7 @@
 
             .progress-line-row .progress-fill {
                 height: 100%;
-                background: linear-gradient(90deg, #28a745 0%, #20c997 50%, #17a2b8 100%);
+                background: linear-gradient(90deg, #2d7705ff 0%, #094003ff 50%, #05ae2dff 100%);
                 border-radius: 6px;
                 transition: width 0.8s ease;
                 position: relative;
@@ -464,7 +519,7 @@
                 top: -25px;
                 left: 50%;
                 transform: translateX(-50%);
-                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                background: linear-gradient(135deg, #09a926ff 0%, #033a02ff 100%);
                 color: white;
                 padding: 2px 5px;
                 border-radius: 15px;
@@ -485,7 +540,7 @@
                 left: 50%;
                 transform: translateX(-50%);
                 border: 4px solid transparent;
-                border-top-color: #28a745;
+                border-top-color: #0db074ff;
             }
 
             /* Adjust rank circles for mobile */
@@ -594,7 +649,7 @@
 
         .mini-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             border-radius: 2px;
             transition: width 0.5s ease;
         }
@@ -609,7 +664,7 @@
         }
 
         .btn-warning.disabled {
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            background: linear-gradient(135deg, rgb(155, 132, 4) 0%, rgb(221, 172, 11) 100%);
             padding: 6px 12px;
             font-size: 0.9rem;
             font-weight: bold;
@@ -618,7 +673,7 @@
         }
 
         .btn-primary.disabled {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);
             padding: 6px 12px;
             font-size: 0.9rem;
             border-radius: 20px;
@@ -626,7 +681,7 @@
         }
 
         .btn-danger.disabled {
-            background: linear-gradient(135deg, #155724 0%, #0f5132 100%);
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
             padding: 6px 12px;
             font-size: 0.9rem;
             border-radius: 20px;
@@ -687,14 +742,21 @@
         }
 
         .requirement-card.completed {
-            background: linear-gradient(135deg, #c3e6cb 0%, #a8d8a8 100%);
-            border-color: #28a745;
+            background: linear-gradient(135deg, #1b4925ff 0%, #08d839ff 100%);
+            border-color: #0dd63cff;
             
         }
 
         .requirement-card.pending {
-            background: linear-gradient(135deg, #e6f7e6 0%, #d4f4dd 100%);
-            border-color: #28a745;
+            background: linear-gradient(135deg, #1f90b6ff 0%, #0b51d4ff 100%);
+            border-color: #057194ff;
+        }
+
+        .text-success {
+            --bs-text-opacity
+        1
+        : 1;
+            color: #e8de2aff !important;
         }
 
         .req-icon {
@@ -711,7 +773,7 @@
 
         .req-content h6 {
             margin-bottom: 8px;
-            color: #333;
+            color: #edf4f4ff;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -728,7 +790,7 @@
 
         .mini-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             border-radius: 3px;
             transition: width 0.5s ease;
             position: relative;
@@ -762,7 +824,7 @@
 
         .overall-progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #28a745 0%, #20c997 50%, #17a2b8 100%);
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             border-radius: 6px;
             transition: width 0.8s ease;
             position: relative;
@@ -804,7 +866,7 @@
         }
 
         .rank-item.current {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, rgba(162, 12, 221, 1) 0%, rgb(25, 206, 219) 100%);
             color: white;
             border: none;
         }
@@ -1079,69 +1141,152 @@
         }
 
 
+        // function claimRankReward(rankNumber) {
+        //         const button = document.querySelector(`button[data-rank-number="${rankNumber}"]`);
+        //         if (!button) {
+        //             console.error('Button not found for rank number:', rankNumber);
+        //             toastr.error('Button not found');
+        //             return;
+        //         }
+
+        //         console.log('Initiating claim for rank number:', rankNumber);
+        //         const originalText = button.textContent;
+        //         const originalClass = button.className;
+
+        //         // Update button to processing state
+        //         button.textContent = 'Processing';
+        //         button.className = 'btn btn-sm btn-warning disabled';
+        //         button.disabled = true;
+
+        //         fetch('{{ route('user.rank.claim') }}', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        //                 },
+        //                 body: JSON.stringify({
+        //                     rank_number: rankNumber  // Changed from rank_id to rank_number
+        //                 })
+        //             })
+        //             .then(response => {
+        //                 if (!response.ok) {
+        //                     throw new Error(`HTTP error! Status: ${response.status}`);
+        //                 }
+        //                 return response.json();
+        //             })
+        //             .then(data => {
+        //                 console.log('Response data:', data);
+        //                 if (data.success) {
+        //                     toastr.success(data.message);
+
+        //                     // Update button with new status
+        //                     const rankItem = button.closest('.rank-item');
+        //                     const actionDiv = rankItem.querySelector('.rank-actions');
+
+        //                     // Update button HTML based on response
+        //                     actionDiv.innerHTML = `<span class="btn btn-sm ${data.claim_status.button_class}">
+        //                                     ${data.claim_status.button_text}
+        //                                 </span>`;
+        //                 } else {
+        //                     toastr.error(data.message || 'Failed to process claim');
+        //                     // Restore original button state
+        //                     button.textContent = originalText;
+        //                     button.className = originalClass;
+        //                     button.disabled = false;
+        //                 }
+        //             })
+        //             .catch(error => {
+        //                 console.error('AJAX error:', error.message);
+        //                 toastr.error('Network error: ' + error.message);
+        //                 // Restore original button state
+        //                 button.textContent = originalText;
+        //                 button.className = originalClass;
+        //                 button.disabled = false;
+        //             });
+        // }
+
         function claimRankReward(rankNumber) {
-                const button = document.querySelector(`button[data-rank-number="${rankNumber}"]`);
-                if (!button) {
-                    console.error('Button not found for rank number:', rankNumber);
+            const button = document.querySelector(`button[data-rank-number="${rankNumber}"]`);
+            if (!button) {
+                console.error('Button not found for rank number:', rankNumber);
+                if (typeof toastr !== 'undefined') {
                     toastr.error('Button not found');
-                    return;
+                } else {
+                    alert('Button not found');
                 }
-
-                console.log('Initiating claim for rank number:', rankNumber);
-                const originalText = button.textContent;
-                const originalClass = button.className;
-
-                // Update button to processing state
-                button.textContent = 'Reward Processing';
-                button.className = 'btn btn-sm btn-warning disabled';
-                button.disabled = true;
-
-                fetch('{{ route('user.rank.claim') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            rank_number: rankNumber  // Changed from rank_id to rank_number
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Response data:', data);
-                        if (data.success) {
-                            toastr.success(data.message);
-
-                            // Update button with new status
-                            const rankItem = button.closest('.rank-item');
-                            const actionDiv = rankItem.querySelector('.rank-actions');
-
-                            // Update button HTML based on response
-                            actionDiv.innerHTML = `<span class="btn btn-sm ${data.claim_status.button_class}">
-                                            ${data.claim_status.button_text}
-                                        </span>`;
-                        } else {
-                            toastr.error(data.message || 'Failed to process claim');
-                            // Restore original button state
-                            button.textContent = originalText;
-                            button.className = originalClass;
-                            button.disabled = false;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('AJAX error:', error.message);
-                        toastr.error('Network error: ' + error.message);
-                        // Restore original button state
-                        button.textContent = originalText;
-                        button.className = originalClass;
-                        button.disabled = false;
-                    });
+                return;
             }
+
+            console.log('Initiating claim for rank number:', rankNumber);
+            const originalText = button.textContent;
+            const originalClass = button.className;
+
+            // Update button to processing state
+            button.textContent = 'Processing';
+            button.className = 'btn btn-sm btn-warning disabled';
+            button.disabled = true;
+
+            fetch('{{ route('user.rank.claim') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    rank_number: rankNumber
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || `HTTP error! Status: ${response.status}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.success) {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+
+                    // Update button with new status
+                    const rankItem = button.closest('.rank-item');
+                    const actionDiv = rankItem.querySelector('.rank-actions');
+
+                    // Update button HTML based on response
+                    actionDiv.innerHTML = `<span class="btn btn-sm ${data.claim_status.button_class}">
+                        ${data.claim_status.button_text}
+                    </span>`;
+                } else {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.error(data.message || 'Failed to process claim');
+                    } else {
+                        alert(data.message || 'Failed to process claim');
+                    }
+                    // Restore original button state
+                    button.textContent = originalText;
+                    button.className = originalClass;
+                    button.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('AJAX error:', error.message);
+                if (typeof toastr !== 'undefined') {
+                    toastr.error('Network error: ' + error.message);
+                } else {
+                    alert('Network error: ' + error.message);
+                }
+                // Restore original button state
+                button.textContent = originalText;
+                button.className = originalClass;
+                button.disabled = false;
+            });
+        }
 
             
            function updateProgressPosition() {

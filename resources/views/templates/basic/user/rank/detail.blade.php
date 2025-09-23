@@ -239,7 +239,7 @@
 @push('style')
     <style>
         .rank-header {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            background: linear-gradient(135deg, #17433c 0%, #0cc90fff 100%);
             padding: 30px;
             border-radius: 15px;
             margin-bottom: 30px;
@@ -259,12 +259,12 @@
         }
 
         .rank-info h2 {
-            color: #1b5e20;
+            color:black;
             margin-bottom: 5px;
         }
 
         .rank-level {
-            color: #2e7d32;
+            color: black;
             font-size: 1.1rem;
             margin-bottom: 5px;
         }

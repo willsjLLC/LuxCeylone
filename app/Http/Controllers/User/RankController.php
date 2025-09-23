@@ -28,7 +28,6 @@ class RankController extends Controller
 
         // Get claimed rank rewards
         $claimedRankRewards = ClaimedRankReward::where('user_id', $user->id)->first();
-
         
         // Get current rank details
         $currentRank = $userRankDetail && $userRankDetail->current_rank_id 
@@ -42,7 +41,9 @@ class RankController extends Controller
 
         // Add claim status to each rank
         foreach ($ranks as $rank) {
-            $rank->claim_status = $this->getRankClaimStatus($rank, $user, $claimedRankRewards);
+            // Check if user has achieved this rank
+            $hasAchievedRank = $currentRankLevel >= $rank->rank;
+            $rank->claim_status = $this->getRankClaimStatus($rank, $user, $claimedRankRewards, $hasAchievedRank);
         }
 
         return view('Template::user.rank.index', compact(
@@ -243,12 +244,13 @@ class RankController extends Controller
 
         // Get all ranks for navigation
         $allRanks = Rank::orderBy('rank')->get();
-
         
-        // Get claimed rank rewards and claim status - UPDATED TO USE RANK NUMBER
+        // Get claimed rank rewards and claim status
         $claimedRankRewards = ClaimedRankReward::where('user_id', $user->id)->first();
-        $claimStatus = $this->getRankClaimStatus($rank, $user, $claimedRankRewards);
-
+        
+        // Check if user has achieved this rank
+        $hasAchievedRank = $currentRankLevel >= $rank->rank;
+        $claimStatus = $this->getRankClaimStatus($rank, $user, $claimedRankRewards, $hasAchievedRank);
 
         return view('Template::user.rank.detail', compact(
             'pageTitle',
@@ -266,7 +268,7 @@ class RankController extends Controller
         ));
     }
     
-      public function claimRankReward(Request $request)
+    public function claimRankReward(Request $request)
     {
         $user = Auth::user();
         $rankNumber = $request->input('rank_number'); // Changed from rank_id to rank_number
@@ -286,8 +288,16 @@ class RankController extends Controller
         }
 
         // Get current user's rank number
-        $currentRank = $user->current_rank_id ? Rank::find($user->current_rank_id) : null;
-        $currentRankNumber = $currentRank ? $currentRank->rank : 0;
+        // $currentRank = $user->current_rank_id ? Rank::find($user->current_rank_id) : null;
+        // $currentRankNumber = $currentRank ? $currentRank->rank : 0;
+
+         // Get user's current rank from UserRankDetail
+    $userRankDetail = UserRankDetail::where('user_id', $user->id)->first();
+    $currentRank = $userRankDetail && $userRankDetail->current_rank_id 
+        ? Rank::find($userRankDetail->current_rank_id) 
+        : null;
+    $currentRankNumber = $currentRank ? $currentRank->rank : 0;
+
 
         // Check if user has achieved this rank
         if ($currentRankNumber < $rankNumber) {
@@ -312,7 +322,6 @@ class RankController extends Controller
                 'rank_three_claimed_status' => Status::RANK_NOT_SATISFIED,
                 'rank_four_status' => Status::RANK_PENDING,
                 'rank_four_claimed_status' => Status::RANK_NOT_SATISFIED,
-                
             ]
         );
 
@@ -368,16 +377,13 @@ class RankController extends Controller
                 'new_status' => $verifyStatus
             ]);
 
+            // Get the updated claim status using the same method as in the view
+            $updatedClaimStatus = $this->getRankClaimStatus($rank, $user, $claimedRankReward, true);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Rank reward claim is now processing',
-                'claim_status' => [
-                    'can_claim' => false,
-                    'is_achieved' => true,
-                    'status' => 'processing',
-                    'button_text' => 'Reward Processing',
-                    'button_class' => 'btn btn-warning disabled'
-                ]
+                'claim_status' => $updatedClaimStatus
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -394,14 +400,8 @@ class RankController extends Controller
         }
     }
 
-    private function getRankClaimStatus($rank, $user, $claimedRankRewards)
+    private function getRankClaimStatus($rank, $user, $claimedRankRewards, $hasAchievedRank)
     {
-        // Get current user's rank number
-        $currentRank = $user->current_rank_id ? Rank::find($user->current_rank_id) : null;
-        $currentRankNumber = $currentRank ? $currentRank->rank : 0;
-        
-        $hasAchievedRank = $currentRankNumber >= $rank->rank;
-
         if (!$hasAchievedRank) {
             return [
                 'can_claim' => false,
@@ -443,21 +443,21 @@ class RankController extends Controller
                 'can_claim' => false,
                 'is_achieved' => true,
                 'status' => 'processing',
-                'button_text' => 'Reward Processing',
+                'button_text' => 'Processing',
                 'button_class' => 'btn btn-warning disabled'
             ],
             Status::RANK_CLAIM_COMPLETED => [
                 'can_claim' => false,
                 'is_achieved' => true,
                 'status' => 'completed',
-                'button_text' => ' Reward Claimed',
+                'button_text' => 'Claimed',
                 'button_class' => 'btn btn-primary disabled'
             ],
             Status::RANK_CLAIM_CANCELED => [
                 'can_claim' => false,
                 'is_achieved' => true,
                 'status' => 'canceled',
-                'button_text' => 'Reward Canceled',
+                'button_text' => 'Canceled',
                 'button_class' => 'btn btn-danger disabled'
             ]
         ];
