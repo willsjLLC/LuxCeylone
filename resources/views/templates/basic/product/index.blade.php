@@ -77,10 +77,10 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
+                                            <button type="button" class="btn" style="background-color: #cc321bff; color: white;"
                                                 data-bs-dismiss="modal">Later</button>
                                             <a href="{{ route('user.kyc.form') }}"
-                                                class="btn btn-primary">Submit Documents</a>
+                                                class="btn" style="background-color: #024017ff; color: white;">Submit Documents</a>
                                         </div>
                                     </div>
                                 </div>
@@ -114,10 +114,10 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
+                                        <button type="button" class="btn" style="background-color: #cc321bff; color: white;"
                                             data-bs-dismiss="modal">Close</button>
                                         <a href="{{ route('user.deposit.employee.package.active') }}"
-                                            class="btn btn-primary">Activate Package</a>
+                                            class="btn" style="background-color: #024017ff; color: white;">Activate Package</a>
                                     </div>
                                 </div>
                             </div>
