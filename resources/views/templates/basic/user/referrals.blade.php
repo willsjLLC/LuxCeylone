@@ -21,14 +21,14 @@
                         <h6 class="mb-3 fw-bold text-white">My Affiliate Link</h6>
                         <div class="input-group">
                             <input type="text" class="bg-white border-0 form-control rounded-start" id="referralLink"
-                                value="{{ env('ADD_CITI_LITE_API') }}/user/register?affiliated_by={{ bin2hex(auth()->user()->username) }}"
+                                value="{{ env('APP_URL') }}/user/register?affiliated_by={{ bin2hex(auth()->user()->username) }}"
                                 readonly>
                             <button class="btn copy-btn" onclick="copyReferralLink()">
                                 Copy
                             </button>
                         </div>
                     </div>
-                    <div class="p-3 card-body p-md-4">
+                    {{-- <div class="p-3 card-body p-md-4">
                         <h6 class="mb-3 fw-bold text-white">My Affiliate Code</h6>
                         <div class="input-group affiliate-code-group">
                             <input type="text" class="bg-white border-0 form-control rounded-start" id="referralCode"
@@ -38,7 +38,7 @@
                                 Copy
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 @if (auth()->user()->role == \App\Constants\Status::LEADER || auth()->user()->is_top_leader==1)
