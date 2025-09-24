@@ -66,7 +66,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(26, 26, 26, 0.95);
+            background: #1a1a1a;
             backdrop-filter: blur(20px);
             z-index: 1000;
             padding: 20px 0;
@@ -285,8 +285,8 @@
         }
 
         .btn--base {
-            background: var(--primary-gold);
-            color: var(--dark-primary);
+            background: #f5f5f531;
+            color: #f5f5f531;
             border: none;
             padding: 16px 32px;
             border-radius: 8px;
@@ -1419,7 +1419,7 @@
             </nav>
 
             <!-- CTA Buttons -->
-            <div class="">
+            <div class="nav-menu">
                 @guest
                     <a class="btn btn--base btn--round btn--md" href="{{ route('user.login') }}">Login</a>
                     <a class="btn btn--base btn--round btn--md" href="{{ route('user.register') }}">Register</a>
