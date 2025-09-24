@@ -59,6 +59,11 @@ class SiteController extends Controller
             ->take(4)
             ->get();
 
+        $products = Product::where('status', 'active')
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get();
+
         $pageTitle = 'Home';
         $sections = Page::where('tempname', activeTemplate())
             ->where('slug', '/')
@@ -70,7 +75,7 @@ class SiteController extends Controller
             null;
 
 
-        return view('Template::home', compact('pageTitle', 'sections', 'seoContents', 'seoImage', 'categories', 'keywords'));
+        return view('Template::home', compact('pageTitle', 'sections', 'seoContents', 'seoImage', 'categories', 'keywords', 'products'));
     }
 
     public function pages($slug)
