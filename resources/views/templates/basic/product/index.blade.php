@@ -12,7 +12,7 @@
 
             <div class="top-header">
                 <div class="header-center">
-                    <p class="user-name text-center">👋 Welcome {{ $user->username }}</p>
+                    <p class="user-name text-center text-dark">👋 Welcome {{ $user->username }}</p>
                 </div>
             </div>
 
@@ -77,10 +77,10 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
+                                            <button type="button" class="btn" style="background-color: #cc321bff; color: white;"
                                                 data-bs-dismiss="modal">Later</button>
                                             <a href="{{ route('user.kyc.form') }}"
-                                                class="btn btn-primary">Submit Documents</a>
+                                                class="btn" style="background-color: #024017ff; color: white;">Submit Documents</a>
                                         </div>
                                     </div>
                                 </div>
@@ -114,10 +114,10 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
+                                        <button type="button" class="btn" style="background-color: #cc321bff; color: white;"
                                             data-bs-dismiss="modal">Close</button>
                                         <a href="{{ route('user.deposit.employee.package.active') }}"
-                                            class="btn btn-primary">Activate Package</a>
+                                            class="btn" style="background-color: #024017ff; color: white;">Activate Package</a>
                                     </div>
                                 </div>
                             </div>
@@ -403,11 +403,6 @@
 
         /* Header Styles */
         .top-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--box-shadow);
         }
 
         .header-center p {

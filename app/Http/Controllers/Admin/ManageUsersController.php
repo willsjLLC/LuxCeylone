@@ -263,6 +263,100 @@ class ManageUsersController extends Controller
         return view('admin.users.detail', compact('pageTitle', 'user', 'totalDeposit', 'totalWithdrawals', 'totalTransaction', 'countries', 'companySaving'));
     }
 
+        public function referralHierarchy($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            
+            // Get all referral data recursively
+            $hierarchyData = $this->getReferralHierarchy($id);
+            
+            return response()->json([
+                'success' => true,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->firstname . ' ' . $user->lastname,
+                    'username' => $user->username,
+                    'email' => $user->email
+                ],
+                'hierarchy' => $hierarchyData
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load hierarchy: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function getReferralHierarchy($userId, $level = 1, $maxLevel = 100)
+    {
+        // Prevent infinite recursion and deep nesting
+        if ($level > $maxLevel) {
+            return [];
+        }
+
+        // Get direct referrals with proper error handling
+        $referrals = User::select('id', 'firstname', 'lastname', 'username', 'email', 'created_at', 'status', 'balance')
+            ->where('referred_user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $result = [];
+        
+        foreach ($referrals as $referral) {
+            // Get children recursively
+            $children = $this->getReferralHierarchy($referral->id, $level + 1, $maxLevel);
+            
+            // Count total referrals for this user
+            $totalReferrals = $this->countDirectReferrals($referral->id);
+            
+            $result[] = [
+                'id' => $referral->id,
+                'name' => trim($referral->firstname . ' ' . $referral->lastname),
+                'username' => $referral->username,
+                'email' => $referral->email,
+                'balance' => showAmount($referral->balance ?? 0),
+                'joined_date' => date('M d, Y', strtotime($referral->created_at)),
+                'status' => $referral->status,
+                'level' => $level,
+                'children' => $children,
+                'direct_referrals' => $totalReferrals,
+                'has_children' => count($children) > 0
+            ];
+        }
+
+        return $result;
+    }
+
+     private function countDirectReferrals($userId)
+    {
+        return User::where('referred_user_id', $userId)->count();
+    }
+
+    private function countTotalReferrals($userId, $visited = [])
+    {
+        // Prevent infinite loops
+        if (in_array($userId, $visited)) {
+            return 0;
+        }
+        
+        $visited[] = $userId;
+        
+        $directCount = User::where('referred_user_id', $userId)->count();
+        $totalCount = $directCount;
+        
+        // Get all direct referrals
+        $directReferrals = User::where('referred_user_id', $userId)->pluck('id');
+        
+        // Recursively count referrals of referrals
+        foreach ($directReferrals as $referralId) {
+            $totalCount += $this->countTotalReferrals($referralId, $visited);
+        }
+        
+        return $totalCount;
+    }
+
 
     public function kycDetails($id)
     {

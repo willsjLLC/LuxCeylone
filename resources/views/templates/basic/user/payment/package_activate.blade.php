@@ -4,7 +4,7 @@
     @include('partials.preloader')
     
     <div class="mt-10 dashboard__content">
-        <h3 class="mb-4 text-center">LuxCeylone Packages</h3>
+        <h3 class="mb-4 text-center">LuxCeylone Membership Packages</h3>
 
         <div class="mb-4">
             <div class="safety-container">
@@ -51,6 +51,9 @@
                                 <h4 class="mb-3 text-center">{{ number_format($package->price) }} LKR</h4>
 
                                 <ul class="list-unstyled text-muted">
+                                    <li><i class="fa fa-circle-check text-success me-2"></i>
+                                        <strong>Lifetime Membership</strong>
+                                    </li>
                                     <li><i class="fa fa-circle-check text-success me-2"></i>
                                         <strong>Package Duration:</strong> {{ $package->package_duration }} Days
                                     </li>
