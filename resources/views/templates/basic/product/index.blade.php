@@ -12,7 +12,7 @@
 
             <div class="top-header">
                 <div class="header-center">
-                    <p class="user-name text-center">👋 Welcome {{ $user->username }}</p>
+                    <p class="user-name text-center text-dark">👋 Welcome {{ $user->username }}</p>
                 </div>
             </div>
 
@@ -403,11 +403,6 @@
 
         /* Header Styles */
         .top-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--box-shadow);
         }
 
         .header-center p {
