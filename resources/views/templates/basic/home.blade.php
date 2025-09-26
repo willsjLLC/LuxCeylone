@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxury Real Estate - Premium Properties</title>
+    <title>Luxceylone</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -952,235 +952,9 @@
 
         /* Footer */
         .luxury-footer {
-            background: var(--secondary-color);
-            color: white;
-            padding: 80px 0 30px;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 60px;
-        }
-
-        .footer-brand {
-            max-width: 300px;
-        }
-
-        .footer-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-
-        .footer-description {
-            color: #CCCCCC;
-            line-height: 1.7;
-            margin-bottom: 30px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .social-link {
-            width: 45px;
-            height: 45px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--primary-light);
-            transform: translateY(-3px);
-        }
-
-        .footer-section h4 {
-            font-family: 'Playfair Display', serif;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: #CCCCCC;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #333;
-            padding-top: 30px;
-            text-align: center;
-            color: #999;
-        }
-
-        /* Animations */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-
-            .nav-container,
-            .hero-container,
-            .section-container,
-            .footer-content {
-                padding: 0 20px;
-            }
-
-            .hero-content {
-                gap: 60px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .nav-menu {
-                display: none;
-            }
-
-            .hero-content {
-                grid-template-columns: 1fr;
-                gap: 60px;
-                text-align: center;
-            }
-
-            .hero-stats {
-                justify-content: center;
-            }
-
-            .categories-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: 100px 0 60px;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 20px;
-                align-items: center;
-            }
-
-            .categories-section,
-            .features-section {
-                padding: 80px 0;
-            }
-
-            .floating-item {
-                display: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-
-            .nav-container,
-            .hero-container,
-            .section-container,
-            .footer-content {
-                padding: 0 15px;
-            }
-
-            .hero-section {
-                padding: 80px 0 40px;
-            }
-
-            .main-product {
-                height: 300px;
-            }
-
-            .product-image {
-                width: 200px;
-                height: 200px;
-                font-size: 2.5rem;
-            }
-        }
-
-        .category-link {
-            text-decoration: none !important;
-        }
-
-        /* Footer Styles */
-        .luxury-footer {
             background: var(--dark-primary);
             color: var(--text-light);
             padding: 80px 0 30px;
-            position: relative;
             border-top: 1px solid var(--glass-border);
         }
 
@@ -1192,13 +966,14 @@
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 60px;
             margin-bottom: 60px;
         }
 
         .footer-brand {
             max-width: 300px;
+            margin: 0 auto;
         }
 
         .footer-logo {
@@ -1220,13 +995,13 @@
         .social-links {
             display: flex;
             gap: 15px;
+            justify-content: center;
         }
 
         .social-link {
             width: 45px;
             height: 45px;
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 50%;
             display: flex;
@@ -1281,26 +1056,15 @@
             font-size: 0.9rem;
         }
 
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .footer-content {
-                padding: 0 20px;
-            }
-
-            .footer-grid {
-                gap: 40px;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 992px) {
             .footer-grid {
                 grid-template-columns: 1fr;
-                gap: 40px;
                 text-align: center;
             }
 
-            .footer-brand {
-                max-width: 100%;
+            .footer-section {
+                text-align: center !important;
             }
 
             .social-links {
@@ -1317,20 +1081,8 @@
                 padding: 60px 0 20px;
             }
 
-            .footer-content {
-                padding: 0 15px;
-            }
-
-            .footer-grid {
-                gap: 30px;
-            }
-
             .footer-logo {
                 font-size: 1.8rem;
-            }
-
-            .footer-section h4 {
-                font-size: 1.1rem;
             }
         }
 
@@ -1377,6 +1129,8 @@
 
     @php
         $bannerContent = getContent('banner.content', true);
+        $contactContent = getContent('contact_us.content', true);
+        $contactElement = getContent('contact_us.element', false, null, true);
     @endphp
 
     <!-- Header -->
@@ -1508,9 +1262,9 @@
                         <p class="category-description">Exquisite diamonds, precious stones, and handcrafted pieces</p>
                         <div class="category-stats">
                             <span class="item-count">285+ Items</span>
-                            <a href="#" class="view-category">
+                            {{-- <a href="#" class="view-category">
                                 View Collection <i class="fas fa-arrow-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>
@@ -1524,9 +1278,9 @@
                         <p class="category-description">Exclusive wristwatches and designer hand watches</p>
                         <div class="category-stats">
                             <span class="item-count">120+ Items</span>
-                            <a href="#" class="view-category">
+                            {{-- <a href="#" class="view-category">
                                 View Collection <i class="fas fa-arrow-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>
@@ -1540,9 +1294,9 @@
                         <p class="category-description">Luxury fragrances, exclusive scents, and designer perfumes</p>
                         <div class="category-stats">
                             <span class="item-count">80+ Items</span>
-                            <a href="#" class="view-category">
+                            {{-- <a href="#" class="view-category">
                                 View Collection <i class="fas fa-arrow-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>
@@ -1556,9 +1310,9 @@
                         <p class="category-description">Haute couture and exclusive designer pieces</p>
                         <div class="category-stats">
                             <span class="item-count">320+ Items</span>
-                            <a href="#" class="view-category">
+                            {{-- <a href="#" class="view-category">
                                 View Collection <i class="fas fa-arrow-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>
@@ -1566,7 +1320,6 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
     <!-- Categories Section -->
     <section class="categories-section" id="collections" style="padding-top: 120px">
         <div class="section-container">
@@ -1584,8 +1337,8 @@
                 @if (isset($categories))
                     @foreach ($products->take(8) as $index => $product)
                         <div class="category-card" style="animation-delay: {{ $index * 0.1 }}s">
-                            <a href="{{ route('ads.index', ['category' => $product->id]) ?? '#' }}"
-                                class="category-link" style="color: white;">
+                            <a href="#" class="category-link"
+                                style="color: white; cursor: default; text-decoration: none;">
                                 <div class="category-image">
                                     <img src="{{ getImage(getFilePath('product') . '/' . $product->image_url, getFileSize('product')) }}"
                                         alt="{{ __($product->name) }}"
@@ -1612,9 +1365,9 @@
                                     <div class="category-stats">
                                         <span class="item-count">{{ $product->ads_count ?? rand(50, 500) }}
                                             Listings</span>
-                                        <span class="view-category">
+                                        {{-- <span class="view-category">
                                             View Collection <i class="fas fa-arrow-right"></i>
-                                        </span>
+                                        </span> --}}
                                     </div>
                                 </div>
 
@@ -1628,67 +1381,68 @@
     </section>
 
     <!-- Footer -->
+    <!-- Footer -->
     <footer class="luxury-footer">
         <div class="footer-content">
             <div class="footer-grid">
-                <!-- Brand Section -->
-                <div class="footer-brand">
-                    <h2 class="footer-logo luxury-font">Luxceylone</h2>
-                    <p class="footer-description">
-                        Discover unparalleled luxury with our exclusive collection of premium properties, curated for
-                        elegance and sophistication.
-                    </p>
-                    <div class="social-links">
-                        <a href="#" class="social-link">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                    </div>
-                </div>
+
                 <!-- Quick Links -->
                 <div class="footer-section">
                     <h4 class="luxury-font">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#collections">Collections</a></li>
-                        <li><a href="#reservation">Reservation</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="{{ route('home') }}">Home</a></li>
+                        <li><a href="{{ route('ads.index') }}">Ads</a></li>
+                        <li>
+                            <a href="{{ route('contact') }}"
+                                class="{{ request()->routeIs('contact') ? 'active' : '' }}">
+                                Contact Us
+                            </a>
+                        </li>
                     </ul>
                 </div>
-                <!-- Explore -->
-                <div class="footer-section">
-                    <h4 class="luxury-font">Explore</h4>
-                    <ul class="footer-links">
-                        <li><a href="#">Luxury Homes</a></li>
-                        <li><a href="#">Urban Estates</a></li>
-                        <li><a href="#">Beachfront Properties</a></li>
-                        <li><a href="#">Exclusive Listings</a></li>
-                    </ul>
+
+                <!-- Brand Section -->
+                <div class="footer-brand text-center">
+                    <h2 class="footer-logo luxury-font">Luxceylone</h2>
+                    <p class="footer-description">
+                        Discover unparalleled luxury with our exclusive collection of premium items,
+                        curated for elegance and sophistication.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
-                <!-- Contact -->
-                <div class="footer-section">
-                    <h4 class="luxury-font">Contact Us</h4>
-                    <ul class="footer-links">
-                        <li><a href="mailto:info@realestate.com">info@realestate.com</a></li>
-                        <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
-                        <li>123 Luxury Lane, Suite 100<br>New York, NY 10001</li>
+
+                <div class="footer-section text-end">
+                    <h4 class="luxury-font">{{ __($contactContent->data_values->title) }}</h4>
+                    <ul class="footer-links footer-contact-list">
+                        @foreach ($contactElement as $contact)
+                            <li>
+                                @if (__($contact->data_values->title) == 'Phone')
+                                    <a
+                                        href="tel:{{ __($contact->data_values->content) }}">{{ __($contact->data_values->content) }}</a>
+
+                            </li>
+                        @elseif(__($contact->data_values->title) == 'Email')
+                            <a
+                                href="mailto:{{ __($contact->data_values->content) }}">{{ __($contact->data_values->content) }}</a>
+                        @else
+                            {{ __($contact->data_values->content) }}
+                        @endif
+                        @endforeach
                     </ul>
                 </div>
             </div>
+
             <div class="footer-bottom">
                 <p>&copy; 2025 Luxceylone. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
 
 
     <script>
