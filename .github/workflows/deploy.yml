@@ -1,0 +1,63 @@
+name: Deploy Laravel to Hostinger
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set execute permission for install script
+        run: chmod +x scripts/install.sh
+
+      - name: Validate required secrets
+        run: ./scripts/install.sh validate_secrets
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          REMOTE_DIR: ${{ secrets.REMOTE_DIR }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: ./scripts/install.sh install_composer
+
+      - name: Setup environment
+        run: ./scripts/install.sh setup_environment
+
+      - name: Prepare deployment files
+        run: ./scripts/install.sh prepare_deployment
+
+      - name: Create deployment package
+        run: ./scripts/install.sh create_package
+
+      - name: Configure SSH
+        run: ./scripts/install.sh configure_ssh
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+
+      - name: Deploy to Hostinger
+        run: ./scripts/install.sh deploy
+        env:
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_DIR: ${{ secrets.REMOTE_DIR }}
+
+      - name: Verify deployment
+        run: ./scripts/install.sh verify_deployment
