@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxury Real Estate - Premium Properties</title>
+    <title>The Home Of Timeless Luxury</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -1657,11 +1657,11 @@
                 <div class="footer-section">
                     <h4 class="luxury-font">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#collections">Collections</a></li>
-                        <li><a href="#reservation">Reservation</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="{{ route('home') }}">Home</a></li>
+                        <li><a href="{{ route('ads.index') }}">Ads</a></li>
+                        <li><a href="{{ route('contact') }}"
+                                class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact
+                                Us</a></li>
                     </ul>
                 </div>
                 <!-- Explore -->
