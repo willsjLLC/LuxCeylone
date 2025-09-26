@@ -134,6 +134,15 @@ Route::middleware('auth')->name('user.')->group(function () {
                 Route::POST('second-owner-delete', 'secondOwnerDeleteNIC')->name('secondOwner.delete.nic');
             });
 
+            Route::controller('RankController')->prefix('rank')->name('rank.')->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('details/{id}', 'detail')->name('detail');
+                 Route::post('/claim', 'claimRankReward')->name('claim');
+
+                 
+            
+            });
+
             Route::controller('JobPostController')->prefix('job')->name('job.')->middleware('kyc')->group(function () {
                 Route::get('create', 'create')->name('create');
                 Route::post('store', 'store')->name('store');

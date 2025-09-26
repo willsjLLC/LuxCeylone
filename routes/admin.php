@@ -68,6 +68,7 @@ Route::middleware('auth:admin')->group(function () {
         Route::get('with-balance', 'usersWithBalance')->name('with.balance');
 
         Route::get('detail/{id}', 'detail')->name('detail');
+         Route::get('referral-hierarchy/{id}', 'referralHierarchy')->name('referral.hierarchy'); // New route
         Route::get('kyc-data/{id}', 'kycDetails')->name('kyc.details');
         Route::post('kyc-approve/{id}', 'kycApprove')->name('kyc.approve');
         Route::post('kyc-reject/{id}', 'kycReject')->name('kyc.reject');
