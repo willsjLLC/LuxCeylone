@@ -2634,21 +2634,24 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
-    <section class="categories-section" id="collections" style="padding-top: 120px">
-        <div class="section-container">
-            <div class="section-header">
-                <div class="section-badge">Premium Collections</div>
-                <h2 class="section-title luxury-font">Amazing Products</h2>
-                <p class="section-subtitle">
-                    Discover our carefully curated luxury collections, each piece selected for its exceptional quality
-                    and timeless elegance.
-                </p>
-            </div>
 
-            <!-- Categories Grid -->
-            <div class="categories-grid">
-                @if (isset($categories))
+    @if (isset($products) && $products->count() > 0)
+        <!-- Categories Section -->
+        <section class="categories-section" id="collections" style="padding-top: 120px">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-badge">Premium Collections</div>
+                    <h2 class="section-title luxury-font">Amazing Products</h2>
+                    <p class="section-subtitle">
+                        Discover our carefully curated luxury collections, each piece selected for its exceptional
+                        quality
+                        and timeless elegance.
+                    </p>
+                </div>
+
+                <!-- Categories Grid -->
+                <div class="categories-grid">
+
                     @foreach ($products->take(8) as $index => $product)
                         <div class="category-card" style="animation-delay: {{ $index * 0.1 }}s">
                             <a href="#" class="category-link"
@@ -2684,18 +2687,17 @@
                                         </span> --}}
                                     </div>
                                 </div>
-
-
                             </a>
                         </div>
                     @endforeach
-                @endif
+
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     <!-- Footer -->
-    <footer class="luxury-footer">
+    <footer class="luxury-footer mt-5">
         <div class="footer-content">
             <div class="footer-grid">
 
