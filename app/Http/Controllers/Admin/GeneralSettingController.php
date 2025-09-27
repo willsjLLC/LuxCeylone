@@ -207,6 +207,7 @@ class GeneralSettingController extends Controller
             try {
                 fileUploader($request->logo, $path, filename: 'logo.png');
             } catch (\Exception $exp) {
+                return $exp;
                 $notify[] = ['error', 'Couldn\'t upload the logo'];
                 return back()->withNotify($notify);
             }
