@@ -34,7 +34,7 @@ class FileInfo
             'path' => 'assets/support',
         ];
         $data['logoIcon'] = [
-            'path' => 'assets/images',
+            'path' => 'assets/user',
         ];
         $data['favicon'] = [
             'size' => '128x128',
